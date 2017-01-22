@@ -1,53 +1,36 @@
-var vows = require('vows');
 var assert = require('assert');
 var exec = require('child_process').exec;
 var fs = require('fs');
 var http = require('http');
-var httpProxy = require('http-proxy');
 var path = require('path');
 var url = require('url');
+
+var httpProxy = require('http-proxy');
 var SourceMapConsumer = require('source-map').SourceMapConsumer;
+var vows = require('vows');
 
-var isWindows = process.platform == 'win32';
-var lineBreakRegExp = new RegExp(require('os').EOL, 'g');
-
-var binaryContext = function (options, context) {
-  if (isWindows)
-    return {};
-
+function binaryContext(options, context) {
   context.topic = function () {
     // We add __DIRECT__=1 to force binary into 'non-piped' mode
     exec('__DIRECT__=1 ./bin/cleancss ' + options, this.callback);
   };
+
   return context;
-};
+}
 
-var pipedContext = function (css, options, context) {
-  if (isWindows)
-    return {};
-
+function pipedContext(css, options, context) {
   context.topic = function () {
     exec('echo "' + css + '" | ./bin/cleancss ' + options, this.callback);
   };
+
   return context;
-};
+}
 
-var unixOnlyContext = function (context) {
-  return isWindows ? {} : context;
-};
+function deleteFile(filename) {
+  exec('rm ' + filename);
+}
 
-var readFile = function (filename) {
-  return fs.readFileSync(filename, { encoding: 'utf-8' }).replace(lineBreakRegExp, '');
-};
-
-var deleteFile = function (filename) {
-  if (isWindows)
-    exec('del /q /f ' + filename);
-  else
-    exec('rm ' + filename);
-};
-
-vows.describe('./bin/cleancss')
+vows.describe('cleancss')
   .addBatch({
     'no options': binaryContext('', {
       'should output help': function (stdout) {
@@ -74,7 +57,7 @@ vows.describe('./bin/cleancss')
   .addBatch({
     'version': binaryContext('-v', {
       'should output help': function (error, stdout) {
-        var version = JSON.parse(fs.readFileSync('./package.json')).version;
+        var version = JSON.parse(fs.readFileSync('./package.json', 'utf-8')).version;
         assert.equal(stdout, version + '\n');
       }
     })
@@ -146,7 +129,7 @@ vows.describe('./bin/cleancss')
         assert.include(stderr, 'Efficiency: 25%');
       },
       'should output content to file': function () {
-        var minimized = readFile('debug.css');
+        var minimized = fs.readFileSync('debug.css', 'utf-8');
         assert.equal(minimized, 'a{color:red}');
       },
       teardown: function () {
@@ -185,9 +168,9 @@ vows.describe('./bin/cleancss')
     })
   })
   .addBatch({
-    'from source': binaryContext('-O2 ./test/fixtures/reset.css', {
+    'from source': binaryContext('--format keep-breaks -O2 ./test/fixtures/reset.css', {
       'should minimize': function (error, stdout) {
-        var minimized = fs.readFileSync('./test/fixtures/reset-min.css', 'utf-8').replace(lineBreakRegExp, '');
+        var minimized = fs.readFileSync('./test/fixtures/reset-min.css', 'utf-8');
         assert.equal(stdout, minimized);
       }
     })
@@ -200,13 +183,13 @@ vows.describe('./bin/cleancss')
     })
   })
   .addBatch({
-    'to file': binaryContext('-O2 -o ./reset1-min.css ./test/fixtures/reset.css', {
+    'to file': binaryContext('--format keep-breaks -O2 -o ./reset1-min.css ./test/fixtures/reset.css', {
       'should give no output': function (error, stdout) {
         assert.isEmpty(stdout);
       },
       'should minimize': function () {
-        var preminified = readFile('./test/fixtures/reset-min.css');
-        var minified = readFile('./reset1-min.css');
+        var preminified = fs.readFileSync('./test/fixtures/reset-min.css', 'utf-8');
+        var minified = fs.readFileSync('./reset1-min.css', 'utf-8');
         assert.equal(minified, preminified);
       },
       teardown: function () {
@@ -252,7 +235,7 @@ vows.describe('./bin/cleancss')
       }),
       'output': binaryContext('-o ./base1-min.css ./test/fixtures/partials-relative/base.css', {
         'should rewrite path relative to current path': function () {
-          var minimized = readFile('./base1-min.css');
+          var minimized = fs.readFileSync('./base1-min.css', 'utf-8');
           assert.equal(minimized, 'a{background:url(test/fixtures/partials/extra/down.gif) 0 0 no-repeat}');
         },
         teardown: function () {
@@ -261,7 +244,7 @@ vows.describe('./bin/cleancss')
       }),
       'piped with output': pipedContext('a{background:url(test/fixtures/partials/extra/down.gif)}', '-o base3-min.css', {
         'should keep paths as they are': function () {
-          var minimized = readFile('base3-min.css');
+          var minimized = fs.readFileSync('base3-min.css', 'utf-8');
           assert.equal(minimized, 'a{background:url(test/fixtures/partials/extra/down.gif)}');
         },
         teardown: function () {
@@ -289,7 +272,7 @@ vows.describe('./bin/cleancss')
       }),
       'relative': binaryContext('-o test/ui.bundled.css ./test/fixtures/rebasing/assets/ui.css', {
         'should rebase urls correctly': function () {
-          var minimized = readFile('test/ui.bundled.css');
+          var minimized = fs.readFileSync('test/ui.bundled.css', 'utf-8');
           assert.include(minimized, 'url(fixtures/rebasing/components/bootstrap/images/glyphs.gif)');
           assert.include(minimized, 'url(fixtures/rebasing/components/jquery-ui/images/prev.gif)');
           assert.include(minimized, 'url(fixtures/rebasing/components/jquery-ui/images/next.gif)');
@@ -334,7 +317,7 @@ vows.describe('./bin/cleancss')
     }
   })
   .addBatch({
-    'timeout': unixOnlyContext({
+    'timeout': {
       topic: function () {
         var self = this;
         var source = '@import url(http://localhost:24682/timeout.css);';
@@ -355,10 +338,10 @@ vows.describe('./bin/cleancss')
       teardown: function () {
         this.server.close();
       }
-    })
+    }
   })
   .addBatch({
-    'HTTP proxy': unixOnlyContext({
+    'HTTP proxy': {
       topic: function () {
         var self = this;
         this.proxied = false;
@@ -388,19 +371,19 @@ vows.describe('./bin/cleancss')
         this.proxyServer.close();
         this.server.close();
       }
-    })
+    }
   })
   .addBatch({
-    'ie7 compatibility': binaryContext('--compatibility ie7 ./test/fixtures/unsupported/selectors-ie7.css', {
+    'ie7 compatibility': binaryContext('--format keep-breaks --compatibility ie7 ./test/fixtures/unsupported/selectors-ie7.css', {
       'should not transform source': function (error, stdout) {
-        assert.equal(stdout, readFile('./test/fixtures/unsupported/selectors-ie7.css'));
+        assert.equal(stdout, fs.readFileSync('./test/fixtures/unsupported/selectors-ie7.css', 'utf-8').trim());
       }
     })
   })
   .addBatch({
-    'ie8 compatibility': binaryContext('--compatibility ie8 ./test/fixtures/unsupported/selectors-ie8.css', {
+    'ie8 compatibility': binaryContext('--format keep-breaks --compatibility ie8 ./test/fixtures/unsupported/selectors-ie8.css', {
       'should not transform source': function (error, stdout) {
-        assert.equal(stdout, readFile('./test/fixtures/unsupported/selectors-ie8.css'));
+        assert.equal(stdout, fs.readFileSync('./test/fixtures/unsupported/selectors-ie8.css', 'utf-8').trim());
       }
     })
   })
@@ -488,13 +471,13 @@ vows.describe('./bin/cleancss')
   .addBatch({
     'source maps - output file': binaryContext('--source-map -o ./reset.min.css ./test/fixtures/reset.css', {
       'includes map in minified file': function () {
-        assert.include(readFile('./reset.min.css'), '/*# sourceMappingURL=reset.min.css.map */');
+        assert.include(fs.readFileSync('./reset.min.css', 'utf-8'), '/*# sourceMappingURL=reset.min.css.map */');
       },
       'creates a map file': function () {
         assert.isTrue(fs.existsSync('./reset.min.css.map'));
       },
       'includes right content in map file': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./reset.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./reset.min.css.map', 'utf-8'));
         assert.deepEqual(
           sourceMap.originalPositionFor({ line: 1, column: 1 }),
           {
@@ -512,7 +495,7 @@ vows.describe('./bin/cleancss')
     })
   })
   .addBatch({
-    'source maps - output file in same folder as input': unixOnlyContext({
+    'source maps - output file in same folder as input': {
       topic: function () {
         var self = this;
 
@@ -521,7 +504,7 @@ vows.describe('./bin/cleancss')
         });
       },
       'includes right content in map file': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./reset.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./reset.min.css.map', 'utf-8'));
         assert.deepEqual(
           sourceMap.originalPositionFor({ line: 1, column: 1 }),
           {
@@ -537,12 +520,12 @@ vows.describe('./bin/cleancss')
         deleteFile('reset.min.css');
         deleteFile('reset.min.css.map');
       }
-    })
+    }
   })
   .addBatch({
     'source maps - output file with existing map': binaryContext('--source-map -o ./styles.min.css ./test/fixtures/source-maps/styles.css', {
       'includes right content in map file': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./styles.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./styles.min.css.map', 'utf-8'));
         assert.deepEqual(
           sourceMap.originalPositionFor({ line: 1, column: 1 }),
           {
@@ -562,7 +545,7 @@ vows.describe('./bin/cleancss')
   .addBatch({
     'source maps - output file for existing map in different folder': binaryContext('--source-map -o ./styles-relative.min.css ./test/fixtures/source-maps/relative.css', {
       'includes right content in map file': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./styles-relative.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./styles-relative.min.css.map', 'utf-8'));
         assert.deepEqual(
           sourceMap.originalPositionFor({ line: 1, column: 1 }),
           {
@@ -582,10 +565,10 @@ vows.describe('./bin/cleancss')
   .addBatch({
     'source maps - with input source map': binaryContext('--source-map -o ./import.min.css ./test/fixtures/source-maps/import.css', {
       'includes map in minified file': function () {
-        assert.include(readFile('./import.min.css'), '/*# sourceMappingURL=import.min.css.map */');
+        assert.include(fs.readFileSync('./import.min.css', 'utf-8'), '/*# sourceMappingURL=import.min.css.map */');
       },
       'includes right content in map file': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./import.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./import.min.css.map', 'utf-8'));
         var count = 0;
         sourceMap.eachMapping(function () { count++; });
 
@@ -600,10 +583,10 @@ vows.describe('./bin/cleancss')
   .addBatch({
     'source maps - with input source map and source inlining': binaryContext('--source-map --source-map-inline-sources -o ./import-inline.min.css ./test/fixtures/source-maps/import.css', {
       'includes map in minified file': function () {
-        assert.include(readFile('./import-inline.min.css'), '/*# sourceMappingURL=import-inline.min.css.map */');
+        assert.include(fs.readFileSync('./import-inline.min.css', 'utf-8'), '/*# sourceMappingURL=import-inline.min.css.map */');
       },
       'includes embedded sources': function () {
-        var sourceMap = new SourceMapConsumer(readFile('./import-inline.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./import-inline.min.css.map', 'utf-8'));
         var count = 0;
         sourceMap.eachMapping(function () { count++; });
 
