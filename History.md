@@ -1,4 +1,4 @@
-4.0.0 / 20xx-xx-xx
+4.0.0 / 2017-01-23
 ==================
 
 * Initial release of separate clean-css-cli.
