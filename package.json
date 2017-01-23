@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
-    "clean-css": "jakubpawlowicz/clean-css#fdf123b",
+    "clean-css": "4.x",
     "commander": "2.x"
   },
   "devDependencies": {
