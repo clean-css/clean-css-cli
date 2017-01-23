@@ -5,10 +5,10 @@
   <br/>
 </h1>
 
-[![NPM version](https://img.shields.io/npm/v/clean-css-cli.svg?style=flat)](https://www.npmjs.com/package/clean-css)
+[![NPM version](https://img.shields.io/npm/v/clean-css-cli.svg?style=flat)](https://www.npmjs.com/package/clean-css-cli)
 [![Linux Build Status](https://img.shields.io/travis/jakubpawlowicz/clean-css-cli/master.svg?style=flat&label=Linux%20build)](https://travis-ci.org/jakubpawlowicz/clean-css)
-[![Dependency Status](https://img.shields.io/david/jakubpawlowicz/clean-css-cli.svg?style=flat)](https://david-dm.org/jakubpawlowicz/clean-css)
-[![NPM Downloads](https://img.shields.io/npm/dm/clean-css-cli.svg)](https://www.npmjs.com/package/clean-css)
+[![Dependency Status](https://img.shields.io/david/jakubpawlowicz/clean-css-cli.svg?style=flat)](https://david-dm.org/jakubpawlowicz/clean-css-cli)
+[![NPM Downloads](https://img.shields.io/npm/dm/clean-css-cli.svg)](https://www.npmjs.com/package/clean-css-cli)
 [![Twitter](https://img.shields.io/badge/Twitter-@cleancss-blue.svg)](https://twitter.com/cleancss)
 
 clean-css-cli is a command-line interface to [clean-css](https://github.com/jakubpawlowicz/clean-css) - fast and efficient CSS optimizer for [Node.js](http://nodejs.org/).
