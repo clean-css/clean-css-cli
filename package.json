@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
-    "clean-css": "^4.0.2",
+    "clean-css": "^4.0.3",
     "commander": "2.x"
   },
   "devDependencies": {
