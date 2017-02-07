@@ -1,14 +1,14 @@
-[4.0.3 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css/compare/v4.0.2...v4.0.3)
+[4.0.3 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.0.2...v4.0.3)
 ==================
 
 * Bumps clean-css dependency to 4.0.3.
 
-[4.0.2 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css/compare/v4.0.1...v4.0.2)
+[4.0.2 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.0.1...v4.0.2)
 ==================
 
 * Bumps clean-css dependency to 4.0.2.
 
-[4.0.1 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css/compare/v4.0.0...v4.0.1)
+[4.0.1 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.0.0...v4.0.1)
 ==================
 
 * Bumps clean-css dependency to 4.0.1.
