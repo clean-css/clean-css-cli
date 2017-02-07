@@ -1,4 +1,4 @@
-[4.0.3 / 2017-xx-xx](https://github.com/jakubpawlowicz/clean-css/compare/v4.0.2...4.0)
+[4.0.3 / 2017-02-07](https://github.com/jakubpawlowicz/clean-css/compare/v4.0.2...v4.0.3)
 ==================
 
 * Bumps clean-css dependency to 4.0.3.
