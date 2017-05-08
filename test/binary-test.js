@@ -612,4 +612,14 @@ vows.describe('cleancss')
       })
     }
   })
+  .addBatch({
+    'custom CLI': {
+      'topic': function () {
+        exec('echo ".block{background-image:url(image.png)}" | ./test/custom-cli/custom-cleancss', this.callback);
+      },
+      'outputs transformed url': function (error, stdout) {
+        assert.equal(stdout, '.block{background-image:url(../valid/path/to/image.png)}');
+      }
+    }
+  })
   .export(module);

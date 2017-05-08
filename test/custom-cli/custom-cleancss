@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+var cleanCssCli = require('../../index');
+return cleanCssCli(process, function (cleanCss) {
+  cleanCss.options.level['1'].transform = function (propertyName, propertyValue) {
+    if (propertyName == 'background-image' && propertyValue.indexOf('../valid/path/to') == -1) {
+      return propertyValue.replace('url(', 'url(../valid/path/to/');
+    }
+  }
+});

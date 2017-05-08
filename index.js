@@ -4,14 +4,16 @@ var path = require('path');
 var CleanCSS = require('clean-css');
 var commands = require('commander');
 
-function cli(process) {
-  var packageConfig = fs.readFileSync(path.join(path.dirname(fs.realpathSync(process.argv[1])), '../package.json'));
+function cli(process, beforeMinifyCallback) {
+  var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
   var buildVersion = JSON.parse(packageConfig).version;
   var fromStdin;
   var debugMode;
   var options;
   var stdin;
   var data;
+
+  beforeMinifyCallback = beforeMinifyCallback || Function.prototype;
 
   // Specify commander options to parse command line params correctly
   commands
@@ -153,7 +155,7 @@ function cli(process) {
 
   // ... and do the magic!
   if (commands.args.length > 0) {
-    minify(process, options, debugMode, commands.args);
+    minify(process, beforeMinifyCallback, options, debugMode, commands.args);
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
@@ -162,7 +164,7 @@ function cli(process) {
       data += chunk;
     });
     stdin.on('end', function () {
-      minify(process, options, debugMode, data);
+      minify(process, beforeMinifyCallback, options, debugMode, data);
     });
   }
 }
@@ -195,8 +197,11 @@ function findArgumentTo(option, rawArgs, args) {
   return value;
 }
 
-function minify(process, options, debugMode, data) {
-  new CleanCSS(options).minify(data, function (errors, minified) {
+function minify(process, beforeMinifyCallback, options, debugMode, data) {
+  var cleanCss = new CleanCSS(options);
+
+  beforeMinifyCallback(cleanCss);
+  cleanCss.minify(data, function (errors, minified) {
     var mapFilename;
 
     if (debugMode) {
