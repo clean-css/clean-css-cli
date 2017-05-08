@@ -66,9 +66,9 @@ commands.on('--help', function () {
   console.log('    %> # `optimizeBackground` controls `background` property optimizatons; defaults to `on`');
   console.log('    %> # `optimizeBorderRadius` controls `border-radius` property optimizatons; defaults to `on`');
   console.log('    %> # `optimizeFilter` controls `filter` property optimizatons; defaults to `on`');
-  console.log('    %> # `optimizeFont controls `font` property optimizatons; defaults to `on` ');
   console.log('    %> # `optimizeFontWeight` controls `font-weight` property optimizatons; defaults to `on`');
   console.log('    %> # `optimizeOutline` controls `outline` property optimizatons; defaults to `on`');
+  console.log('    %> # `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)');
   console.log('    %> # `removeNegativePaddings` controls removing negative paddings; defaults to `on`');
   console.log('    %> # `removeQuotes` controls removing quotes when unnecessary; defaults to `on`');
   console.log('    %> # `removeWhitespace` controls removing unused whitespace; defaults to `on`');
@@ -96,7 +96,10 @@ commands.on('--help', function () {
   console.log('    %> # `removeDuplicateFontRules` controls duplicate `@font-face` removing; defaults to `on`');
   console.log('    %> # `removeDuplicateMediaBlocks` controls duplicate `@media` removing; defaults to `on`');
   console.log('    %> # `removeDuplicateRules` controls duplicate rules removing; defaults to `on`');
+  console.log('    %> # `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)');
+  console.log('    %> # `removeUnusedAtRules` controls unused at rule removing; defaults to `off` (since 4.1.0)');
   console.log('    %> # `restructureRules` controls rule restructuring; defaults to `off`');
+  console.log('    %> # `skipProperties` controls which properties won\'t be optimized, defaults to empty list which means all will be optimized (since 4.1.0)');
 
   process.exit();
 });

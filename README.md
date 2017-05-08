@@ -218,9 +218,9 @@ cleancss -O1 removeQuotes:off;roundingPrecision:4;specialComments:1 one.css
 # `optimizeBackground` controls `background` property optimizatons; defaults to `on`
 # `optimizeBorderRadius` controls `border-radius` property optimizatons; defaults to `on`
 # `optimizeFilter` controls `filter` property optimizatons; defaults to `on`
-# `optimizeFont controls `font` property optimizatons; defaults to `on`
 # `optimizeFontWeight` controls `font-weight` property optimizatons; defaults to `on`
 # `optimizeOutline` controls `outline` property optimizatons; defaults to `on`
+# `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)
 # `removeNegativePaddings` controls removing negative paddings; defaults to `on`
 # `removeQuotes` controls removing quotes when unnecessary; defaults to `on`
 # `removeWhitespace` controls removing unused whitespace; defaults to `on`
@@ -262,7 +262,10 @@ cleancss -O2 mergeMedia:off;restructureRules:off;mergeSemantically:on;mergeIntoS
 # `removeDuplicateFontRules` controls duplicate `@font-face` removing; defaults to `on`
 # `removeDuplicateMediaBlocks` controls duplicate `@media` removing; defaults to `on`
 # `removeDuplicateRules` controls duplicate rules removing; defaults to `on`
+# `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)
+# `removeUnusedAtRules` controls unused at rule removing; defaults to `off` (since 4.1.0)
 # `restructureRules` controls rule restructuring; defaults to `off`
+# `skipProperties` controls which properties won\'t be optimized, defaults to empty list which means all will be optimized (since 4.1.0)
 ```
 
 There is an `all` shortcut for toggling all options at the same time, e.g.

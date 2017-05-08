@@ -145,9 +145,9 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
-    'level 1 and 2 optimizations': pipedContext('a{font:"Arial"}a{color:red}', '-O1 all:false,removeQuotes:true -O2 all:false', {
+    'level 1 and 2 optimizations': pipedContext('a{font:16px "Arial"}a{color:red}', '-O1 all:false,removeQuotes:true -O2 all:false', {
       'should do basic optimizations only': function (error, stdout) {
-        assert.equal(stdout, 'a{font:Arial}a{color:red}');
+        assert.equal(stdout, 'a{font:16px Arial}a{color:red}');
       }
     })
   })
