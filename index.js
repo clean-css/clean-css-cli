@@ -10,6 +10,7 @@ function cli(process, beforeMinifyCallback) {
   var buildVersion = JSON.parse(packageConfig).version;
   var fromStdin;
   var debugMode;
+  var removeInlinedFiles;
   var options;
   var stdin;
   var data;
@@ -27,6 +28,7 @@ function cli(process, beforeMinifyCallback) {
     .option('-O <n> [optimizations]', 'Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below', function (val) { return Math.abs(parseInt(val)); })
     .option('--inline [rules]', 'Enables inlining for listed sources (defaults to `local`)')
     .option('--inline-timeout [seconds]', 'Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)', parseFloat)
+    .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
     .option('--skip-rebase', 'Disable URLs rebasing')
     .option('--source-map', 'Enables building input\'s source map')
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps');
@@ -134,6 +136,8 @@ function cli(process, beforeMinifyCallback) {
 
   // Now coerce commands into CleanCSS configuration...
   debugMode = commands.debug;
+  removeInlinedFiles = commands.removeInlinedFiles;
+
   options = {
     compatibility: commands.compatibility,
     format: commands.format,
@@ -156,7 +160,7 @@ function cli(process, beforeMinifyCallback) {
 
   // ... and do the magic!
   if (commands.args.length > 0) {
-    minify(process, beforeMinifyCallback, options, debugMode, expandGlobs(commands.args));
+    minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, expandGlobs(commands.args));
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
@@ -165,7 +169,7 @@ function cli(process, beforeMinifyCallback) {
       data += chunk;
     });
     stdin.on('end', function () {
-      minify(process, beforeMinifyCallback, options, debugMode, data);
+      minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, data);
     });
   }
 }
@@ -204,7 +208,7 @@ function expandGlobs(paths) {
   }, []);
 }
 
-function minify(process, beforeMinifyCallback, options, debugMode, data) {
+function minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, data) {
   var cleanCss = new CleanCSS(options);
 
   beforeMinifyCallback(cleanCss);
@@ -230,6 +234,10 @@ function minify(process, beforeMinifyCallback, options, debugMode, data) {
 
     if (minified.errors.length > 0) {
       process.exit(1);
+    }
+
+    if (removeInlinedFiles) {
+      minified.inlinedStylesheets.forEach(fs.unlinkSync);
     }
 
     if (minified.sourceMap) {

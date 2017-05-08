@@ -84,6 +84,7 @@ clean-css-cli 4.0 introduces some breaking changes:
 -O <n> [optimizations]         Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below
 --inline [rules]               Enables inlining for listed sources (defaults to `local`)
 --inline-timeout [seconds]     Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)
+--remove-inlined-files         Remove files inlined in <source-file ...> or via `@import` statements
 --skip-rebase                  Disable URLs rebasing
 --source-map                   Enables building input's source map
 --source-map-inline-sources    Enables inlining sources inside source maps

@@ -636,4 +636,49 @@ vows.describe('cleancss')
       })
     }
   })
+  .addBatch({
+    'removing inlined stylesheets - off': {
+      'topic': function() {
+        var self = this;
+
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
+          exec('__DIRECT__=1 ./bin/cleancss test/fixtures/reset-removing.css', self.callback);
+        });
+      },
+      'keeps the file': function () {
+        assert.isTrue(fs.existsSync('test/fixtures/reset-removing.css'));
+      },
+      'teardown': function () {
+        deleteFile('test/fixtures/reset-removing.css');
+      }
+    }
+  })
+  .addBatch({
+    'removing inlined stylesheets - on': {
+      'topic': function() {
+        var self = this;
+
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
+          exec('__DIRECT__=1 ./bin/cleancss --remove-inlined-files test/fixtures/reset-removing.css', self.callback);
+        });
+      },
+      'removes the file': function () {
+        assert.isFalse(fs.existsSync('test/fixtures/reset-removing.css'));
+      }
+    }
+  })
+  .addBatch({
+    'removing inlined stylesheets - on via @import': {
+      'topic': function() {
+        var self = this;
+
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
+          exec('echo "@import \'test/fixtures/reset-removing.css\';" | ./bin/cleancss --remove-inlined-files', self.callback);
+        });
+      },
+      'removes the file': function () {
+        assert.isFalse(fs.existsSync('test/fixtures/reset-removing.css'));
+      }
+    }
+  })
   .export(module);
