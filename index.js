@@ -153,7 +153,7 @@ function cli(process) {
 
   // ... and do the magic!
   if (commands.args.length > 0) {
-    minify(commands.args);
+    minify(process, options, debugMode, commands.args);
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
@@ -162,93 +162,93 @@ function cli(process) {
       data += chunk;
     });
     stdin.on('end', function () {
-      minify(data);
+      minify(process, options, debugMode, data);
     });
   }
+}
 
-  function findArgumentTo(option, rawArgs, args) {
-    var value = true;
-    var optionAt = rawArgs.indexOf(option);
-    var nextOption = rawArgs[optionAt + 1];
-    var looksLikePath;
-    var asArgumentAt;
+function findArgumentTo(option, rawArgs, args) {
+  var value = true;
+  var optionAt = rawArgs.indexOf(option);
+  var nextOption = rawArgs[optionAt + 1];
+  var looksLikePath;
+  var asArgumentAt;
 
-    if (!nextOption) {
-      return value;
-    }
-
-    looksLikePath = nextOption.indexOf('.css') > -1 ||
-      /\//.test(nextOption) ||
-      /\\[^\-]/.test(nextOption) ||
-      /^https?:\/\//.test(nextOption);
-    asArgumentAt = args.indexOf(nextOption);
-
-    if (!looksLikePath) {
-      value = nextOption;
-    }
-
-    if (!looksLikePath && asArgumentAt > -1) {
-      args.splice(asArgumentAt, 1);
-    }
-
+  if (!nextOption) {
     return value;
   }
 
-  function minify(data) {
-    new CleanCSS(options).minify(data, function (errors, minified) {
-      var mapFilename;
+  looksLikePath = nextOption.indexOf('.css') > -1 ||
+    /\//.test(nextOption) ||
+    /\\[^\-]/.test(nextOption) ||
+    /^https?:\/\//.test(nextOption);
+  asArgumentAt = args.indexOf(nextOption);
 
-      if (debugMode) {
-        console.error('Original: %d bytes', minified.stats.originalSize);
-        console.error('Minified: %d bytes', minified.stats.minifiedSize);
-        console.error('Efficiency: %d%', ~~(minified.stats.efficiency * 10000) / 100.0);
-        console.error('Time spent: %dms', minified.stats.timeSpent);
-
-        if (minified.inlinedStylesheets.length > 0) {
-          console.error('Inlined stylesheets:');
-          minified.inlinedStylesheets.forEach(function (uri) {
-            console.error('- %s', uri);
-          });
-        }
-      }
-
-      outputFeedback(minified.errors, true);
-      outputFeedback(minified.warnings);
-
-      if (minified.errors.length > 0) {
-        process.exit(1);
-      }
-
-      if (minified.sourceMap) {
-        mapFilename = path.basename(options.output) + '.map';
-        output(minified.styles + '/*# sourceMappingURL=' + mapFilename + ' */');
-        outputMap(minified.sourceMap, mapFilename);
-      } else {
-        output(minified.styles);
-      }
-    });
+  if (!looksLikePath) {
+    value = nextOption;
   }
 
-  function output(minified) {
-    if (options.output) {
-      fs.writeFileSync(options.output, minified, 'utf8');
-    } else {
-      process.stdout.write(minified);
+  if (!looksLikePath && asArgumentAt > -1) {
+    args.splice(asArgumentAt, 1);
+  }
+
+  return value;
+}
+
+function minify(process, options, debugMode, data) {
+  new CleanCSS(options).minify(data, function (errors, minified) {
+    var mapFilename;
+
+    if (debugMode) {
+      console.error('Original: %d bytes', minified.stats.originalSize);
+      console.error('Minified: %d bytes', minified.stats.minifiedSize);
+      console.error('Efficiency: %d%', ~~(minified.stats.efficiency * 10000) / 100.0);
+      console.error('Time spent: %dms', minified.stats.timeSpent);
+
+      if (minified.inlinedStylesheets.length > 0) {
+        console.error('Inlined stylesheets:');
+        minified.inlinedStylesheets.forEach(function (uri) {
+          console.error('- %s', uri);
+        });
+      }
     }
-  }
 
-  function outputMap(sourceMap, mapFilename) {
-    var mapPath = path.join(path.dirname(options.output), mapFilename);
-    fs.writeFileSync(mapPath, sourceMap.toString(), 'utf-8');
-  }
+    outputFeedback(minified.errors, true);
+    outputFeedback(minified.warnings);
 
-  function outputFeedback(messages, isError) {
-    var prefix = isError ? '\x1B[31mERROR\x1B[39m:' : 'WARNING:';
+    if (minified.errors.length > 0) {
+      process.exit(1);
+    }
 
-    messages.forEach(function (message) {
-      console.error('%s %s', prefix, message);
-    });
+    if (minified.sourceMap) {
+      mapFilename = path.basename(options.output) + '.map';
+      output(process, options, minified.styles + '/*# sourceMappingURL=' + mapFilename + ' */');
+      outputMap(options, minified.sourceMap, mapFilename);
+    } else {
+      output(process, options, minified.styles);
+    }
+  });
+}
+
+function outputFeedback(messages, isError) {
+  var prefix = isError ? '\x1B[31mERROR\x1B[39m:' : 'WARNING:';
+
+  messages.forEach(function (message) {
+    console.error('%s %s', prefix, message);
+  });
+}
+
+function output(process, options, minified) {
+  if (options.output) {
+    fs.writeFileSync(options.output, minified, 'utf8');
+  } else {
+    process.stdout.write(minified);
   }
+}
+
+function outputMap(options, sourceMap, mapFilename) {
+  var mapPath = path.join(path.dirname(options.output), mapFilename);
+  fs.writeFileSync(mapPath, sourceMap.toString(), 'utf-8');
 }
 
 module.exports = cli;
