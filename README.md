@@ -21,6 +21,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Install](#install)
 - [Use](#use)
   * [Important: 4.0 breaking changes](#important-40-breaking-changes)
+  * [What's new in version 4.1](#whats-new-in-version-41)
   * [CLI options](#cli-options)
   * [Compatibility modes](#compatibility-modes)
   * [Formatting options](#formatting-options)
@@ -29,6 +30,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
     + [Level 0 optimizations](#level-0-optimizations)
     + [Level 1 optimizations](#level-1-optimizations)
     + [Level 2 optimizations](#level-2-optimizations)
+  * [As a module](#as-a-module)
 - [FAQ](#faq)
   * [How to optimize multiple files?](#how-to-optimize-multiple-files)
   * [How to specify a custom rounding precision?](#how-to-specify-a-custom-rounding-precision)
@@ -71,6 +73,16 @@ clean-css-cli 4.0 introduces some breaking changes:
 * level 1 optimizations are the new default, up to 3.x it was level 2;
 * `--keep-breaks` option is replaced with `--format keep-breaks` to ease transition;
 * `--skip-aggressive-merging` option is removed as aggressive merging is replaced by smarter override merging.
+
+## What's new in version 4.1
+
+clean-css-cli 4.1 introduces the following changes / features:
+
+* `--remove-inlined-files` option for removing files inlined in <source-file ...> or via `@import` statements;
+* adds glob pattern matching to source paths, see [example](#how-to-optimize-multiple-files);
+* allows non-boolean compatibility options, e.g. `--compatibility selectors.mergeLimit=512`;
+* extracts CLI into an importable module, so it can be reused and enhanced if needed;
+* adds `beforeMinify` callback as a second argument to CLI module, see [example use case](#as-a-module).
 
 ## CLI options
 
@@ -275,6 +287,24 @@ There is an `all` shortcut for toggling all options at the same time, e.g.
 cleancss -O2 all:off;removeDuplicateRules:on one.css
 ```
 
+# As a module
+
+clean-css-cli can also be used as a module in a way of enhancing its functionality in a programmatic way, e.g.
+
+```js
+#!/usr/bin/env node
+
+var cleanCssCli = require('clean-css-cli');
+
+return cleanCssCli(process, function beforeMinify(cleanCss) {
+  cleanCss.options.level['1'].transform = function (propertyName, propertyValue) {
+    if (propertyName == 'background-image' && propertyValue.indexOf('../valid/path/to') == -1) {
+      return propertyValue.replace('url(', 'url(../valid/path/to/');
+    }
+  }
+});
+```
+
 # FAQ
 
 More answers can be found in [clean-css FAQ section](https://github.com/jakubpawlowicz/clean-css#faq).
@@ -285,6 +315,12 @@ It can be done by passing in paths to multiple files, e.g.
 
 ```shell
 cleancss -o merged.min.css one.css two.css three.css
+```
+
+Since version 4.1.0 it can also be done using glob pattern matching, e.g.
+
+```shell
+cleancss -o merged.min.css *.css
 ```
 
 ## How to specify a custom rounding precision?
