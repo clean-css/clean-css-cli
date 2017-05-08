@@ -25,6 +25,12 @@
     "url": "https://github.com/jakubpawlowicz/clean-css-cli/issues"
   },
   "main": "index.js",
+  "files": [
+    "bin",
+    "History.md",
+    "index.js",
+    "LICENSE"
+  ],
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
     "clean-css": "^4.1.0",
