@@ -622,4 +622,18 @@ vows.describe('cleancss')
       }
     }
   })
+  .addBatch({
+    'wildcard paths': {
+      'files': binaryContext('./test/fixtures/partials/on*.css ./test/fixtures/partials/f?ve.css', {
+        'outputs all matched sources minified': function (error, stdout) {
+          assert.equal(stdout, '.one{color:red}.five{background:url(data:image/jpeg;base64,/9j/)}');
+        }
+      }),
+      'directories': binaryContext('./test/fixtures/partials/**/*.css', {
+        'outputs all matched sources minified': function (error, stdout) {
+          assert.equal(stdout, '.one{color:red}.three{color:#0f0}.two{color:#fff}.four{color:#00f}');
+        }
+      })
+    }
+  })
   .export(module);

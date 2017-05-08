@@ -3,6 +3,7 @@ var path = require('path');
 
 var CleanCSS = require('clean-css');
 var commands = require('commander');
+var glob = require('glob');
 
 function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
@@ -155,7 +156,7 @@ function cli(process, beforeMinifyCallback) {
 
   // ... and do the magic!
   if (commands.args.length > 0) {
-    minify(process, beforeMinifyCallback, options, debugMode, commands.args);
+    minify(process, beforeMinifyCallback, options, debugMode, expandGlobs(commands.args));
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
@@ -195,6 +196,12 @@ function findArgumentTo(option, rawArgs, args) {
   }
 
   return value;
+}
+
+function expandGlobs(paths) {
+  return paths.reduce(function (accumulator, path) {
+    return accumulator.concat(glob.sync(path, { nodir: true, nonull: true}));
+  }, []);
 }
 
 function minify(process, beforeMinifyCallback, options, debugMode, data) {
