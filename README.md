@@ -78,6 +78,7 @@ clean-css-cli 4.0 introduces some breaking changes:
 
 clean-css-cli 4.1 introduces the following changes / features:
 
+* [clean-css 4.1](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-41) as a dependency;
 * `--remove-inlined-files` option for removing files inlined in <source-file ...> or via `@import` statements;
 * adds glob pattern matching to source paths, see [example](#how-to-optimize-multiple-files);
 * allows non-boolean compatibility options, e.g. `--compatibility selectors.mergeLimit=512`;
