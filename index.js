@@ -5,6 +5,8 @@ var CleanCSS = require('clean-css');
 var commands = require('commander');
 var glob = require('glob');
 
+var COMPATIBILITY_PATTERN = /([\w\.]+)=(\w+)/g;
+
 function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
   var buildVersion = JSON.parse(packageConfig).version;
@@ -211,6 +213,7 @@ function expandGlobs(paths) {
 function minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, data) {
   var cleanCss = new CleanCSS(options);
 
+  applyNonBooleanCompatibilityFlags(cleanCss, options.compatibility);
   beforeMinifyCallback(cleanCss);
   cleanCss.minify(data, function (errors, minified) {
     var mapFilename;
@@ -248,6 +251,33 @@ function minify(process, beforeMinifyCallback, options, debugMode, removeInlined
       output(process, options, minified.styles);
     }
   });
+}
+
+function applyNonBooleanCompatibilityFlags(cleanCss, compatibility) {
+  var match;
+  var scope;
+  var parts;
+  var i, l;
+
+  if (!compatibility) {
+    return;
+  }
+
+  patternLoop:
+  while ((match = COMPATIBILITY_PATTERN.exec(compatibility)) !== null) {
+    scope = cleanCss.options.compatibility;
+    parts = match[1].split('.');
+
+    for (i = 0, l = parts.length - 1; i < l; i++) {
+      scope = scope[parts[i]];
+
+      if (!scope) {
+        continue patternLoop;
+      }
+    }
+
+    scope[parts.pop()] = match[2];
+  }
 }
 
 function outputFeedback(messages, isError) {

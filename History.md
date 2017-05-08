@@ -4,6 +4,7 @@
 * Bumps clean-css dependency to 4.1.x.
 * Fixed issue [#1](https://github.com/jakubpawlowicz/clean-css-cli/issues/1) - option to remove inlined files.
 * Fixed issue [#2](https://github.com/jakubpawlowicz/clean-css-cli/issues/2) - glob matching source paths.
+* Fixed issue [#5](https://github.com/jakubpawlowicz/clean-css-cli/issues/5) - non-boolean compatibility options.
 * Fixed issue [#7](https://github.com/jakubpawlowicz/clean-css-cli/issues/7) - using CLI as a module.
 
 [4.0.12 / 2017-04-12](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.0.11...v4.0.12)

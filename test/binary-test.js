@@ -395,6 +395,13 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
+    'custom compatibility non-boolean options': pipedContext('.block-1{color:red}.block-2{color:red}', '--compatibility "selectors.mergeLimit=1,unknown.option=all" -O2', {
+      'keeps source intact': function (error, stdout) {
+        assert.equal(stdout, '.block-1{color:red}.block-2{color:red}');
+      }
+    })
+  })
+  .addBatch({
     'rounding precision': {
       'default': pipedContext('div{width:0.10051px}', '', {
         'should keep 2 decimal places': function (error, stdout) {
