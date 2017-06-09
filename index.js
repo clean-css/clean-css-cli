@@ -6,6 +6,7 @@ var commands = require('commander');
 var glob = require('glob');
 
 var COMPATIBILITY_PATTERN = /([\w\.]+)=(\w+)/g;
+var lineBreak = require('os').EOL;
 
 function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
@@ -245,7 +246,7 @@ function minify(process, beforeMinifyCallback, options, debugMode, removeInlined
 
     if (minified.sourceMap) {
       mapFilename = path.basename(options.output) + '.map';
-      output(process, options, minified.styles + '/*# sourceMappingURL=' + mapFilename + ' */');
+      output(process, options, minified.styles + lineBreak + '/*# sourceMappingURL=' + mapFilename + ' */');
       outputMap(options, minified.sourceMap, mapFilename);
     } else {
       output(process, options, minified.styles);

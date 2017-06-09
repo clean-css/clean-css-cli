@@ -6,6 +6,7 @@ var path = require('path');
 var url = require('url');
 
 var httpProxy = require('http-proxy');
+var lineBreak = require('os').EOL;
 var SourceMapConsumer = require('source-map').SourceMapConsumer;
 var vows = require('vows');
 
@@ -478,7 +479,7 @@ vows.describe('cleancss')
   .addBatch({
     'source maps - output file': binaryContext('--source-map -o ./reset.min.css ./test/fixtures/reset.css', {
       'includes map in minified file': function () {
-        assert.include(fs.readFileSync('./reset.min.css', 'utf-8'), '/*# sourceMappingURL=reset.min.css.map */');
+        assert.include(fs.readFileSync('./reset.min.css', 'utf-8'), lineBreak + '/*# sourceMappingURL=reset.min.css.map */');
       },
       'creates a map file': function () {
         assert.isTrue(fs.existsSync('./reset.min.css.map'));
@@ -572,7 +573,7 @@ vows.describe('cleancss')
   .addBatch({
     'source maps - with input source map': binaryContext('--source-map -o ./import.min.css ./test/fixtures/source-maps/import.css', {
       'includes map in minified file': function () {
-        assert.include(fs.readFileSync('./import.min.css', 'utf-8'), '/*# sourceMappingURL=import.min.css.map */');
+        assert.include(fs.readFileSync('./import.min.css', 'utf-8'), lineBreak + '/*# sourceMappingURL=import.min.css.map */');
       },
       'includes right content in map file': function () {
         var sourceMap = new SourceMapConsumer(fs.readFileSync('./import.min.css.map', 'utf-8'));
@@ -590,7 +591,7 @@ vows.describe('cleancss')
   .addBatch({
     'source maps - with input source map and source inlining': binaryContext('--source-map --source-map-inline-sources -o ./import-inline.min.css ./test/fixtures/source-maps/import.css', {
       'includes map in minified file': function () {
-        assert.include(fs.readFileSync('./import-inline.min.css', 'utf-8'), '/*# sourceMappingURL=import-inline.min.css.map */');
+        assert.include(fs.readFileSync('./import-inline.min.css', 'utf-8'), lineBreak + '/*# sourceMappingURL=import-inline.min.css.map */');
       },
       'includes embedded sources': function () {
         var sourceMap = new SourceMapConsumer(fs.readFileSync('./import-inline.min.css.map', 'utf-8'));

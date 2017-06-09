@@ -1,3 +1,8 @@
+[4.1.4 / 2017-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.3...4.1)
+==================
+
+* Fixed issue [#10](https://github.com/jakubpawlowicz/clean-css-cli/issues/10) - IE/Edge source maps.
+
 [4.1.3 / 2017-05-18](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.2...v4.1.3)
 ==================
 
