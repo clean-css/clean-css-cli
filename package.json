@@ -33,7 +33,7 @@
   ],
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
-    "clean-css": "^4.1.4",
+    "clean-css": "^4.1.5",
     "commander": "2.x",
     "glob": "7.x"
   },
