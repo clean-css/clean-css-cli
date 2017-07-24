@@ -47,8 +47,9 @@ clean-css-cli requires Node.js 4.0+ (tested on Linux, OS X, and Windows)
 # Install
 
 ```shell
-npm install clean-css-cli
+npm install clean-css-cli -g
 ```
+Note: Global install is mandatory for CLI purpose.
 
 # Use
 
