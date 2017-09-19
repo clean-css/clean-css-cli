@@ -1,4 +1,4 @@
-[4.1.10 / 2017-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.9...4.1)
+[4.1.10 / 2017-09-19](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.9...v4.1.10)
 ==================
 
 * Bumps clean-css dependency to 4.1.9.
