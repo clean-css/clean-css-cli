@@ -1,3 +1,8 @@
+[4.1.x / 2018-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.10...4.1)
+==================
+
+* Fixed issue [#17](https://github.com/jakubpawlowicz/clean-css-cli/issues/17) - empty `--inline` switch.
+
 [4.1.10 / 2017-09-19](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.1.9...v4.1.10)
 ==================
 

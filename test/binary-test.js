@@ -221,6 +221,11 @@ vows.describe('cleancss')
         assert.equal(stdout, '@import url(http://127.0.0.1/remote.css);.one{color:red}');
       }
     }),
+    'disable remote @import as default #2': pipedContext('@import url(http://127.0.0.1/remote.css);@import url(test/fixtures/partials/one.css);', '--inline', {
+      'keeps remote import rule': function (error, stdout) {
+        assert.equal(stdout, '@import url(http://127.0.0.1/remote.css);.one{color:red}');
+      }
+    }),
     'disable remote @import by host': pipedContext('@import url(http://127.0.0.1/remote.css);@import url(test/fixtures/partials/one.css);', '--inline !127.0.0.1', {
       'keeps remote import rule': function (error, stdout) {
         assert.equal(stdout, '@import url(http://127.0.0.1/remote.css);.one{color:red}');
