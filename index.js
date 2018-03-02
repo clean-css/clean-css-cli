@@ -144,7 +144,7 @@ function cli(process, beforeMinifyCallback) {
   options = {
     compatibility: commands.compatibility,
     format: commands.format,
-    inline: commands.inline || 'local',
+    inline: typeof commands.inline == 'string' ? commands.inline : 'local',
     inlineTimeout: commands.inlineTimeout * 1000,
     level: commands.O0 || commands.O1 || commands.O2 ?
       { '0': commands.O0, '1': commands.O1, '2': commands.O2 } :
