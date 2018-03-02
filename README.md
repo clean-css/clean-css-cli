@@ -253,7 +253,7 @@ cleancss -O1 removeQuotes:off;roundingPrecision:4;specialComments:1 one.css
 There is an `all` shortcut for toggling all options at the same time, e.g.
 
 ```shell
-cleancss -O1 all:off;tidySelectors:on one.css
+cleancss -O1 'all:off;tidySelectors:on' one.css
 ```
 
 ### Level 2 optimizations
@@ -286,7 +286,7 @@ cleancss -O2 mergeMedia:off;restructureRules:off;mergeSemantically:on;mergeIntoS
 There is an `all` shortcut for toggling all options at the same time, e.g.
 
 ```shell
-cleancss -O2 all:off;removeDuplicateRules:on one.css
+cleancss -O2 'all:off;removeDuplicateRules:on' one.css
 ```
 
 # As a module
