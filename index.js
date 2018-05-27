@@ -132,10 +132,12 @@ function cli(process, beforeMinifyCallback) {
   }
 
   // If no sensible data passed in just print help and exit
-  fromStdin = !process.env.__DIRECT__ && !process.stdin.isTTY;
-  if (!fromStdin && commands.args.length === 0) {
-    commands.outputHelp();
-    return 0;
+  if (commands.args.length === 0) {
+    fromStdin = !process.env.__DIRECT__ && !process.stdin.isTTY;
+    if (!fromStdin) {
+      commands.outputHelp();
+      return 0;
+    }
   }
 
   // Now coerce commands into CleanCSS configuration...
