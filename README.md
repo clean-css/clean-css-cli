@@ -170,6 +170,7 @@ cleancss --format 'breaks:afterBlockBegins=on;spaces:aroundSelectorRelation=on' 
 #   `afterRuleEnds` controls if a line break comes after a rule ends; defaults to `off`
 #   `beforeBlockEnds` controls if a line break comes before a block ends; defaults to `off`
 #   `betweenSelectors` controls if a line break comes between selectors; defaults to `off`
+# `breakWith` controls the new line character, can be `windows` or `unix` (aliased via `crlf` and `lf`); defaults to system one, so former on Windows and latter on Unix
 # `indentBy` controls number of characters to indent with; defaults to `0`
 # `indentWith` controls a character to indent with, can be `space` or `tab`; defaults to `space`
 # `spaces` controls where to insert spaces
