@@ -594,6 +594,24 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
+    'source maps - with input source map and configured line breaks': binaryContext('--source-map --format breakWith:crlf -o ./import.min.css ./test/fixtures/source-maps/import.css', {
+      'includes map in minified file': function () {
+        assert.include(fs.readFileSync('./import.min.css', 'utf-8'), '\r\n/*# sourceMappingURL=import.min.css.map */');
+      },
+      'includes right content in map file': function () {
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./import.min.css.map', 'utf-8'));
+        var count = 0;
+        sourceMap.eachMapping(function () { count++; });
+
+        assert.equal(count, 6);
+      },
+      'teardown': function () {
+        deleteFile('import.min.css');
+        deleteFile('import.min.css.map');
+      }
+    })
+  })
+  .addBatch({
     'source maps - with input source map and source inlining': binaryContext('--source-map --source-map-inline-sources -o ./import-inline.min.css ./test/fixtures/source-maps/import.css', {
       'includes map in minified file': function () {
         assert.include(fs.readFileSync('./import-inline.min.css', 'utf-8'), lineBreak + '/*# sourceMappingURL=import-inline.min.css.map */');

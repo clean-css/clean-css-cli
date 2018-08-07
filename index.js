@@ -6,7 +6,7 @@ var commands = require('commander');
 var glob = require('glob');
 
 var COMPATIBILITY_PATTERN = /([\w\.]+)=(\w+)/g;
-var lineBreak = require('os').EOL;
+var systemLineBreak = require('os').EOL;
 
 function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
@@ -218,6 +218,7 @@ function minify(process, beforeMinifyCallback, options, debugMode, removeInlined
   beforeMinifyCallback(cleanCss);
   cleanCss.minify(data, function (errors, minified) {
     var mapFilename;
+    var lineBreak;
 
     if (debugMode) {
       console.error('Original: %d bytes', minified.stats.originalSize);
@@ -246,6 +247,7 @@ function minify(process, beforeMinifyCallback, options, debugMode, removeInlined
 
     if (minified.sourceMap) {
       mapFilename = path.basename(options.output) + '.map';
+      lineBreak = cleanCss.options.format ? cleanCss.options.format.breakWith : systemLineBreak;
       output(process, options, minified.styles + lineBreak + '/*# sourceMappingURL=' + mapFilename + ' */');
       outputMap(options, minified.sourceMap, mapFilename);
     } else {

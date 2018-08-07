@@ -2,6 +2,7 @@
 ==================
 
 * Bumps clean-css dependency to 4.2.1.
+* Derives line break before source map comment from `breakWith` option.
 
 [4.2.0 / 2018-08-02](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.1...v4.2.0)
 ==================
