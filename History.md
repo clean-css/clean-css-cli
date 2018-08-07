@@ -1,3 +1,8 @@
+[4.2.1 / 2018-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/v4.2.0...HEAD)
+==================
+
+* Bumps clean-css dependency to 4.2.1.
+
 [4.2.0 / 2018-08-02](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.1...v4.2.0)
 ==================
 
