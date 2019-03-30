@@ -102,6 +102,7 @@ clean-css-cli 4.1 introduces the following changes / features:
 --skip-rebase                  Disable URLs rebasing
 --source-map                   Enables building input's source map
 --source-map-inline-sources    Enables inlining sources inside source maps
+--input-source-map [file]      Specifies the path of the input source map file
 ```
 
 ## Compatibility modes

@@ -34,7 +34,8 @@ function cli(process, beforeMinifyCallback) {
     .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
     .option('--skip-rebase', 'Disable URLs rebasing')
     .option('--source-map', 'Enables building input\'s source map')
-    .option('--source-map-inline-sources', 'Enables inlining sources inside source maps');
+    .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
+    .option('--input-source-map [file]', 'Specifies the path of the input source map file');
 
   commands.on('--help', function () {
     console.log('  Examples:\n');
@@ -156,14 +157,25 @@ function cli(process, beforeMinifyCallback) {
     sourceMapInlineSources: commands.sourceMapInlineSources
   };
 
+  if (commands.inputSourceMap && !options.sourceMap) {
+    options.sourceMap = true;
+  }
+
   if (options.sourceMap && !options.output) {
     outputFeedback(['Source maps will not be built because you have not specified an output file.'], true);
     options.sourceMap = false;
   }
 
+  var configurations = {
+    beforeMinifyCallback: beforeMinifyCallback,
+    debugMode: debugMode,
+    removeInlinedFiles: removeInlinedFiles,
+    inputSourceMap: commands.inputSourceMap
+  };
+
   // ... and do the magic!
   if (commands.args.length > 0) {
-    minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, expandGlobs(commands.args));
+    minify(process, options, configurations, expandGlobs(commands.args));
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
@@ -172,7 +184,7 @@ function cli(process, beforeMinifyCallback) {
       data += chunk;
     });
     stdin.on('end', function () {
-      minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, data);
+      minify(process, options, configurations, data);
     });
   }
 }
@@ -211,15 +223,15 @@ function expandGlobs(paths) {
   }, []);
 }
 
-function minify(process, beforeMinifyCallback, options, debugMode, removeInlinedFiles, data) {
+function minify(process, options, configurations, data) {
   var cleanCss = new CleanCSS(options);
 
   applyNonBooleanCompatibilityFlags(cleanCss, options.compatibility);
-  beforeMinifyCallback(cleanCss);
-  cleanCss.minify(data, function (errors, minified) {
+  configurations.beforeMinifyCallback(cleanCss);
+  cleanCss.minify(data, getSourceMapContent(configurations.inputSourceMap), function (errors, minified) {
     var mapFilename;
 
-    if (debugMode) {
+    if (configurations.debugMode) {
       console.error('Original: %d bytes', minified.stats.originalSize);
       console.error('Minified: %d bytes', minified.stats.minifiedSize);
       console.error('Efficiency: %d%', ~~(minified.stats.efficiency * 10000) / 100.0);
@@ -240,7 +252,7 @@ function minify(process, beforeMinifyCallback, options, debugMode, removeInlined
       process.exit(1);
     }
 
-    if (removeInlinedFiles) {
+    if (configurations.removeInlinedFiles) {
       minified.inlinedStylesheets.forEach(fs.unlinkSync);
     }
 
@@ -287,6 +299,21 @@ function outputFeedback(messages, isError) {
   messages.forEach(function (message) {
     console.error('%s %s', prefix, message);
   });
+}
+
+function getSourceMapContent(sourceMapPath) {
+  if (!sourceMapPath || !fs.existsSync(sourceMapPath)) {
+    return null;
+  }
+  var content = null;
+
+  try {
+    content = fs.readFileSync(sourceMapPath).toString();
+  } catch (e) {
+    console.error('Failed to read the input source map file.');
+  }
+
+  return content;
 }
 
 function output(process, options, minified) {

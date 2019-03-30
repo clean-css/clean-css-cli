@@ -694,4 +694,49 @@ vows.describe('cleancss')
       }
     }
   })
+  .addBatch({
+    'process an input-source-map': pipedContext(fs.readFileSync('./test/fixtures/source-maps/map/styles.css'), '-o ./test/styles.min.css --input-source-map ./test/fixtures/source-maps/map/input.map', {
+      'enables the source map flag': function() {
+        assert.isTrue(fs.existsSync('test/styles.min.css'));
+        assert.isTrue(fs.existsSync('test/styles.min.css.map'));
+      },
+      'teardown': function () {
+        deleteFile('test/styles.min.css');
+        deleteFile('test/styles.min.css.map');
+      }
+    })
+  })
+  .addBatch({
+    'missing an input-source-map': pipedContext(fs.readFileSync('./test/fixtures/source-maps/map/styles.css'), '-o ./test/styles.min.css', {
+      'does not generate a source map if the parameter is missing': function() {
+        assert.isTrue(fs.existsSync('test/styles.min.css'));
+        assert.isFalse(fs.existsSync('test/styles.min.css.map'));
+      },
+      'teardown': function () {
+        deleteFile('test/styles.min.css');
+      }
+    })
+  })
+  .addBatch({
+    'content of input-source-map': pipedContext(fs.readFileSync('./test/fixtures/source-maps/map/styles.css'), '-o ./test/styles.min.css --input-source-map ./test/fixtures/source-maps/map/input.map', {
+      'includes the right content of the source map': function() {
+        assert.isTrue(fs.existsSync('test/styles.min.css.map'));
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./test/styles.min.css.map', 'utf-8'));
+
+        assert.deepEqual(
+          sourceMap.originalPositionFor({ line: 1, column: 1 }),
+          {
+            source: 'styles.less',
+            line: 1,
+            column: 4,
+            name: null
+          }
+        );
+      },
+      'teardown': function () {
+        deleteFile('test/styles.min.css');
+        deleteFile('test/styles.min.css.map');
+      }
+    })
+  })
   .export(module);
