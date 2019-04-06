@@ -23,6 +23,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
   * [Important: 4.0 breaking changes](#important-40-breaking-changes)
   * [What's new in version 4.1](#whats-new-in-version-41)
   * [What's new in version 4.2](#whats-new-in-version-42)
+  * [What's new in version 4.3](#whats-new-in-version-43)
   * [CLI options](#cli-options)
   * [Compatibility modes](#compatibility-modes)
   * [Formatting options](#formatting-options)
@@ -92,6 +93,12 @@ clean-css-cli 4.1 introduces the following changes / features:
 clean-css-cli 4.2 introduces the following changes / features:
 
 * [clean-css 4.2](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-42) as a dependency;
+
+## What's new in version 4.3
+
+clean-css-cli 4.3 introduces the following changes / features:
+
+* `--input-source-map` option which accepts a path to input source map file.
 
 ## CLI options
 
