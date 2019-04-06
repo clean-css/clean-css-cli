@@ -22,6 +22,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Use](#use)
   * [Important: 4.0 breaking changes](#important-40-breaking-changes)
   * [What's new in version 4.1](#whats-new-in-version-41)
+  * [What's new in version 4.2](#whats-new-in-version-42)
   * [CLI options](#cli-options)
   * [Compatibility modes](#compatibility-modes)
   * [Formatting options](#formatting-options)
@@ -85,6 +86,12 @@ clean-css-cli 4.1 introduces the following changes / features:
 * allows non-boolean compatibility options, e.g. `--compatibility selectors.mergeLimit=512`;
 * extracts CLI into an importable module, so it can be reused and enhanced if needed;
 * adds `beforeMinify` callback as a second argument to CLI module, see [example use case](#as-a-module).
+
+## What's new in version 4.2
+
+clean-css-cli 4.2 introduces the following changes / features:
+
+* [clean-css 4.2](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-42) as a dependency;
 
 ## CLI options
 
