@@ -1,4 +1,4 @@
-[4.3.0-pre / 2019-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.2...HEAD)
+[4.3.0 / 2019-04-06](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.2...v4.3.0)
 ==================
 
 * Bumps clean-css dependency to 4.2.1.
