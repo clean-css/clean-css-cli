@@ -1,4 +1,5 @@
 var fs = require('fs');
+var os = require('os');
 var path = require('path');
 
 var CleanCSS = require('clean-css');
@@ -6,7 +7,6 @@ var commands = require('commander');
 var glob = require('glob');
 
 var COMPATIBILITY_PATTERN = /([\w\.]+)=(\w+)/g;
-var lineBreak = require('os').EOL;
 
 function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
@@ -260,12 +260,32 @@ function minify(process, options, configurations, data) {
 
     if (minified.sourceMap) {
       mapFilename = path.basename(options.output) + '.map';
-      output(process, options, minified.styles + lineBreak + '/*# sourceMappingURL=' + mapFilename + ' */');
+      output(process, options, minified.styles + getLineEndings(options.format) + '/*# sourceMappingURL=' + mapFilename + ' */');
       outputMap(options, minified.sourceMap, mapFilename);
     } else {
       output(process, options, minified.styles);
     }
   });
+}
+
+function getLineEndings(format) {
+  var lineBreak = os.EOL;
+
+  if (!format) {
+    return lineBreak;
+  }
+
+  var breakWith = format.split('=')[1];
+
+  if (!breakWith) {
+    return lineBreak;
+  }
+
+  if (breakWith === 'windows' || breakWith === 'crlf') {
+    return '\r\n';
+  } else {
+    return '\n';
+  }
 }
 
 function applyNonBooleanCompatibilityFlags(cleanCss, compatibility) {
