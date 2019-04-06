@@ -2,6 +2,8 @@
 ==================
 
 * Bumps clean-css dependency to 4.2.1.
+* Fixed issue [#21](https://github.com/jakubpawlowicz/clean-css-cli/issues/21) - sanity check for printing out help.
+* Fixed issue [#27](https://github.com/jakubpawlowicz/clean-css-cli/issues/27) - way to provide input source map.
 
 [4.2.0 / 2018-08-02](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.1...v4.2.0)
 ==================
