@@ -227,6 +227,8 @@ or a fine-grained configuration given via a string.
 
 Please note that level 1 optimization options are generally safe while level 2 optimizations should be safe for most users.
 
+Important: The `-O` option is using the capital letter O (as in "Oscar"), not the number zero. 
+
 ### Level 0 optimizations
 
 Level 0 optimizations simply means "no optimizations". Use it when you'd like to inline imports and / or rebase URLs but skip everything else, e.g.
