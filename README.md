@@ -20,6 +20,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Node.js version support](#nodejs-version-support)
 - [Install](#install)
 - [Use](#use)
+  * [What's new in version 5.0](#whats-new-in-version-50)
   * [Important: 4.0 breaking changes](#important-40-breaking-changes)
   * [What's new in version 4.1](#whats-new-in-version-41)
   * [What's new in version 4.2](#whats-new-in-version-42)
@@ -58,6 +59,14 @@ Note: Global install via -g option is recommended unless you want to execute the
 ```shell
 cleancss -o one.min.css one.css
 ```
+
+## What's new in version 5.0
+
+clean-css-cli 5.0 introduces the following changes / features:
+
+* clean-css 5.0 with loads of bugfixes;
+* `--skip-rebase` option has been removed as rebasing URLs is disabled by default now
+* `--with-rebase` option is added if you really want URLs rebasing
 
 ## Important: 4.0 breaking changes
 
@@ -227,7 +236,7 @@ or a fine-grained configuration given via a string.
 
 Please note that level 1 optimization options are generally safe while level 2 optimizations should be safe for most users.
 
-Important: The `-O` option is using the capital letter O (as in "Oscar"), not the number zero. 
+Important: The `-O` option is using the capital letter O (as in "Oscar"), not the number zero.
 
 ### Level 0 optimizations
 

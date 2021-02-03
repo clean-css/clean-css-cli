@@ -1,3 +1,8 @@
+[5.0.0 / 2021-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.3...HEAD)
+==================
+
+* Bumps clean-css dependency to 5.0.
+
 [4.3.0 / 2019-04-06](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.2...v4.3.0)
 ==================
 

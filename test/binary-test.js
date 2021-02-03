@@ -236,7 +236,7 @@ vows.describe('cleancss')
     'relative image paths': {
       'no output': binaryContext('./test/fixtures/partials-relative/base.css', {
         'should leave paths': function (error, stdout) {
-          assert.equal(stdout, 'a{background:url(test/fixtures/partials/extra/down.gif) 0 0 no-repeat}');
+          assert.equal(stdout, 'a{background:url(../partials/extra/down.gif) 0 0 no-repeat}');
         }
       }),
       'output': binaryContext('-o ./base1-min.css ./test/fixtures/partials-relative/base.css', {
@@ -269,14 +269,14 @@ vows.describe('cleancss')
   })
   .addBatch({
     'complex import and url rebasing': {
-      'absolute': binaryContext('./test/fixtures/rebasing/assets/ui.css', {
+      'absolute': binaryContext('--with-rebase ./test/fixtures/rebasing/assets/ui.css', {
         'should rebase urls correctly': function (error, stdout) {
           assert.include(stdout, 'url(test/fixtures/rebasing/components/bootstrap/images/glyphs.gif)');
           assert.include(stdout, 'url(test/fixtures/rebasing/components/jquery-ui/images/prev.gif)');
           assert.include(stdout, 'url(test/fixtures/rebasing/components/jquery-ui/images/next.gif)');
         }
       }),
-      'relative': binaryContext('-o test/ui.bundled.css ./test/fixtures/rebasing/assets/ui.css', {
+      'relative': binaryContext('--with-rebasing -o test/ui.bundled.css ./test/fixtures/rebasing/assets/ui.css', {
         'should rebase urls correctly': function () {
           var minimized = fs.readFileSync('test/ui.bundled.css', 'utf-8');
           assert.include(minimized, 'url(fixtures/rebasing/components/bootstrap/images/glyphs.gif)');
@@ -291,7 +291,7 @@ vows.describe('cleancss')
   })
   .addBatch({
     'complex import and skipped url rebasing': {
-      'absolute': binaryContext('--skip-rebase ./test/fixtures/rebasing/assets/ui.css', {
+      'absolute': binaryContext('./test/fixtures/rebasing/assets/ui.css', {
         'should rebase urls correctly': function (error, stdout) {
           assert.isNull(error);
           assert.include(stdout, 'url(../images/glyphs.gif)');
@@ -416,7 +416,7 @@ vows.describe('cleancss')
       }),
       'custom': pipedContext('div{width:0.00051px}', '-O1 roundingPrecision:4', {
         'should keep 4 decimal places': function (error, stdout) {
-          assert.equal(stdout, 'div{width:.0005px}');
+          assert.equal(stdout, 'div{width:0.0005px}');
         }
       }),
       'zero': pipedContext('div{width:1.5051px}', '-O1 roundingPrecision:0', {

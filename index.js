@@ -32,7 +32,7 @@ function cli(process, beforeMinifyCallback) {
     .option('--inline [rules]', 'Enables inlining for listed sources (defaults to `local`)')
     .option('--inline-timeout [seconds]', 'Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)', parseFloat)
     .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
-    .option('--skip-rebase', 'Disable URLs rebasing')
+    .option('--with-rebase', 'Enable URLs rebasing')
     .option('--source-map', 'Enables building input\'s source map')
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
     .option('--input-source-map [file]', 'Specifies the path of the input source map file');
@@ -49,16 +49,17 @@ function cli(process, beforeMinifyCallback) {
     console.log('    %> cleancss --format keep-breaks one.css');
     console.log('    %> cleancss --format \'indentBy:1;indentWith:tab\' one.css');
     console.log('    %> cleancss --format \'breaks:afterBlockBegins=on;spaces:aroundSelectorRelation=on\' one.css');
+    console.log('    %> cleancss --format \'breaks:afterBlockBegins=2;spaces:aroundSelectorRelation=on\' one.css');
     console.log('    %> # `breaks` controls where to insert breaks');
-    console.log('    %> #   `afterAtRule` controls if a line break comes after an at-rule; e.g. `@charset`; defaults to `off` (alias to `false`)');
-    console.log('    %> #   `afterBlockBegins` controls if a line break comes after a block begins; e.g. `@media`; defaults to `off`');
-    console.log('    %> #   `afterBlockEnds` controls if a line break comes after a block ends, defaults to `off`');
-    console.log('    %> #   `afterComment` controls if a line break comes after a comment; defaults to `off`');
-    console.log('    %> #   `afterProperty` controls if a line break comes after a property; defaults to `off`');
-    console.log('    %> #   `afterRuleBegins` controls if a line break comes after a rule begins; defaults to `off`');
-    console.log('    %> #   `afterRuleEnds` controls if a line break comes after a rule ends; defaults to `off`');
-    console.log('    %> #   `beforeBlockEnds` controls if a line break comes before a block ends; defaults to `off`');
-    console.log('    %> #   `betweenSelectors` controls if a line break comes between selectors; defaults to `off`');
+    console.log('    %> #   `afterAtRule` controls if a line break comes after an at-rule; e.g. `@charset`; defaults to `off` (alias to `false`); accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterBlockBegins` controls if a line break comes after a block begins; e.g. `@media`; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterBlockEnds` controls if a line break comes after a block ends, defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterComment` controls if a line break comes after a comment; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterProperty` controls if a line break comes after a property; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterRuleBegins` controls if a line break comes after a rule begins; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `afterRuleEnds` controls if a line break comes after a rule ends; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `beforeBlockEnds` controls if a line break comes before a block ends; defaults to `off`; accepts number of line breaks as an argument too');
+    console.log('    %> #   `betweenSelectors` controls if a line break comes between selectors; defaults to `off`; accepts number of line breaks as an argument too');
     console.log('    %> # `indentBy` controls number of characters to indent with; defaults to `0`');
     console.log('    %> # `indentWith` controls a character to indent with, can be `space` or `tab`; defaults to `space`');
     console.log('    %> # `spaces` controls where to insert spaces');
@@ -153,8 +154,8 @@ function cli(process, beforeMinifyCallback) {
       { '0': commands.O0, '1': commands.O1, '2': commands.O2 } :
       undefined,
     output: commands.output,
-    rebase: commands.skipRebase ? false : true,
-    rebaseTo: ('output' in commands) && commands.output.length > 0 ? path.dirname(path.resolve(commands.output)) : process.cwd(),
+    rebase: commands.withRebase ? true : false,
+    rebaseTo: ('output' in commands) && commands.output.length > 0 ? path.dirname(path.resolve(commands.output)) : (commands.withRebase ? process.cwd() : undefined),
     sourceMap: commands.sourceMap,
     sourceMapInlineSources: commands.sourceMapInlineSources
   };
