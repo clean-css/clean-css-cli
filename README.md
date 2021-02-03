@@ -109,7 +109,7 @@ clean-css-cli 4.3 introduces the following changes / features:
 -d, --debug                    Shows debug information (minification time & compression efficiency)
 -f, --format <options>         Controls output formatting, see examples below
 -o, --output [output-file]     Use [output-file] as output instead of STDOUT
--O <n> [optimizations]         Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below
+-O <n> [optimizations]         Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, IMPORTANT: the prefix is O (a capital o letter), NOT a 0 (zero, a number)
 --inline [rules]               Enables inlining for listed sources (defaults to `local`)
 --inline-timeout [seconds]     Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)
 --remove-inlined-files         Remove files inlined in <source-file ...> or via `@import` statements

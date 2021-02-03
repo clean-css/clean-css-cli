@@ -28,7 +28,7 @@ function cli(process, beforeMinifyCallback) {
     .option('-d, --debug', 'Shows debug information (minification time & compression efficiency)')
     .option('-f, --format <options>', 'Controls output formatting, see examples below')
     .option('-o, --output [output-file]', 'Use [output-file] as output instead of STDOUT')
-    .option('-O <n> [optimizations]', 'Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below', function (val) { return Math.abs(parseInt(val)); })
+    .option('-O <n> [optimizations]', 'Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below, IMPORTANT: the prefix is O (a capital o letter), NOT a 0 (zero, a number)', function (val) { return Math.abs(parseInt(val)); })
     .option('--inline [rules]', 'Enables inlining for listed sources (defaults to `local`)')
     .option('--inline-timeout [seconds]', 'Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)', parseFloat)
     .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
