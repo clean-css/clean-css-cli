@@ -2,7 +2,7 @@ var fs = require('fs');
 var path = require('path');
 
 var CleanCSS = require('clean-css');
-var commands = require('commander');
+var program = require('commander');
 var glob = require('glob');
 
 var COMPATIBILITY_PATTERN = /([\w\.]+)=(\w+)/g;
@@ -14,6 +14,7 @@ function cli(process, beforeMinifyCallback) {
   var fromStdin;
   var debugMode;
   var removeInlinedFiles;
+  var inputOptions;
   var options;
   var stdin;
   var data;
@@ -21,7 +22,7 @@ function cli(process, beforeMinifyCallback) {
   beforeMinifyCallback = beforeMinifyCallback || Function.prototype;
 
   // Specify commander options to parse command line params correctly
-  commands
+  program
     .version(buildVersion, '-v, --version')
     .usage('[options] <source-file ...>')
     .option('-c, --compatibility [ie7|ie8]', 'Force compatibility mode (see Readme for advanced examples)')
@@ -37,7 +38,7 @@ function cli(process, beforeMinifyCallback) {
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
     .option('--input-source-map [file]', 'Specifies the path of the input source map file');
 
-  commands.on('--help', function () {
+  program.on('--help', function () {
     console.log('  Examples:\n');
     console.log('    %> cleancss one.css');
     console.log('    %> cleancss -o one-min.css one.css');
@@ -118,49 +119,48 @@ function cli(process, beforeMinifyCallback) {
     process.exit();
   });
 
-  commands.parse(process.argv);
-
-  if (commands.rawArgs.indexOf('-O0') > -1) {
-    commands.O0 = true;
-  }
-
-  if (commands.rawArgs.indexOf('-O1') > -1) {
-    commands.O1 = findArgumentTo('-O1', commands.rawArgs, commands.args);
-  }
-
-  if (commands.rawArgs.indexOf('-O2') > -1) {
-    commands.O2 = findArgumentTo('-O2', commands.rawArgs, commands.args);
-  }
+  program.parse(process.argv);
+  inputOptions = program.opts();
 
   // If no sensible data passed in just print help and exit
-  if (commands.args.length === 0) {
+  if (program.args.length === 0) {
     fromStdin = !process.env.__DIRECT__ && !process.stdin.isTTY;
     if (!fromStdin) {
-      commands.outputHelp();
+      program.outputHelp();
       return 0;
     }
   }
 
-  // Now coerce commands into CleanCSS configuration...
-  debugMode = commands.debug;
-  removeInlinedFiles = commands.removeInlinedFiles;
+  // Now coerce arguments into CleanCSS configuration...
+  debugMode = inputOptions.debug;
+  removeInlinedFiles = inputOptions.removeInlinedFiles;
 
   options = {
-    compatibility: commands.compatibility,
-    format: commands.format,
-    inline: typeof commands.inline == 'string' ? commands.inline : 'local',
-    inlineTimeout: commands.inlineTimeout * 1000,
-    level: commands.O0 || commands.O1 || commands.O2 ?
-      { '0': commands.O0, '1': commands.O1, '2': commands.O2 } :
-      undefined,
-    output: commands.output,
-    rebase: commands.withRebase ? true : false,
-    rebaseTo: ('output' in commands) && commands.output.length > 0 ? path.dirname(path.resolve(commands.output)) : (commands.withRebase ? process.cwd() : undefined),
-    sourceMap: commands.sourceMap,
-    sourceMapInlineSources: commands.sourceMapInlineSources
+    compatibility: inputOptions.compatibility,
+    format: inputOptions.format,
+    inline: typeof inputOptions.inline == 'string' ? inputOptions.inline : 'local',
+    inlineTimeout: inputOptions.inlineTimeout * 1000,
+    level: { 1: true },
+    output: inputOptions.output,
+    rebase: inputOptions.withRebase ? true : false,
+    rebaseTo: ('output' in inputOptions) && inputOptions.output.length > 0 ? path.dirname(path.resolve(inputOptions.output)) : (inputOptions.withRebase ? process.cwd() : undefined),
+    sourceMap: inputOptions.sourceMap,
+    sourceMapInlineSources: inputOptions.sourceMapInlineSources
   };
 
-  if (commands.inputSourceMap && !options.sourceMap) {
+  if (program.rawArgs.indexOf('-O0') > -1) {
+    options.level[0] = true;
+  }
+
+  if (program.rawArgs.indexOf('-O1') > -1) {
+    options.level[1] = findArgumentTo('-O1', program.rawArgs, program.args);
+  }
+
+  if (program.rawArgs.indexOf('-O2') > -1) {
+    options.level[2] = findArgumentTo('-O2', program.rawArgs, program.args);
+  }
+
+  if (inputOptions.inputSourceMap && !options.sourceMap) {
     options.sourceMap = true;
   }
 
@@ -173,12 +173,12 @@ function cli(process, beforeMinifyCallback) {
     beforeMinifyCallback: beforeMinifyCallback,
     debugMode: debugMode,
     removeInlinedFiles: removeInlinedFiles,
-    inputSourceMap: commands.inputSourceMap
+    inputSourceMap: inputOptions.inputSourceMap
   };
 
   // ... and do the magic!
-  if (commands.args.length > 0) {
-    minify(process, options, configurations, expandGlobs(commands.args));
+  if (program.args.length > 0) {
+    minify(process, options, configurations, expandGlobs(program.args));
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');

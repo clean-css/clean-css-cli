@@ -276,7 +276,7 @@ vows.describe('cleancss')
           assert.include(stdout, 'url(test/fixtures/rebasing/components/jquery-ui/images/next.gif)');
         }
       }),
-      'relative': binaryContext('--with-rebasing -o test/ui.bundled.css ./test/fixtures/rebasing/assets/ui.css', {
+      'relative': binaryContext('--with-rebase -o test/ui.bundled.css ./test/fixtures/rebasing/assets/ui.css', {
         'should rebase urls correctly': function () {
           var minimized = fs.readFileSync('test/ui.bundled.css', 'utf-8');
           assert.include(minimized, 'url(fixtures/rebasing/components/bootstrap/images/glyphs.gif)');
