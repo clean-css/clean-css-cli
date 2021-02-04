@@ -45,7 +45,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 
 # Node.js version support
 
-clean-css-cli requires Node.js 4.0+ (tested on Linux, OS X, and Windows)
+clean-css-cli requires Node.js 10.0+ (tested on Linux, OS X, and Windows)
 
 # Install
 
@@ -65,6 +65,7 @@ cleancss -o one.min.css one.css
 clean-css-cli 5.0 introduces the following changes / features:
 
 * clean-css 5.0 with loads of bugfixes;
+* drops official support for Node.js 4, 6, and 8;
 * `--skip-rebase` option has been removed as rebasing URLs is disabled by default now
 * `--with-rebase` option is added if you really want URLs rebasing
 
