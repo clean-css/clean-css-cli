@@ -5,6 +5,7 @@
 * Bumps clean-css dependency to 5.0.
 * Bumps commander dependency to 7.0.
 * Fixed issue [#18](https://github.com/jakubpawlowicz/clean-css-cli/issues/18) - allows batch processing of input files.
+* Fixed issue [#36](https://github.com/jakubpawlowicz/clean-css-cli/issues/36) - automatically creates missing output directories.
 
 [4.3.0 / 2019-04-06](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.2...v4.3.0)
 ==================

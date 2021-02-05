@@ -196,6 +196,15 @@ vows.describe('cleancss')
       teardown: function () {
         deleteFile('./reset1-min.css');
       }
+    }),
+    'to file when target path does not exist': binaryContext('-o ./test/fixtures-temp/reset-min.css ./test/fixtures/reset.css', {
+      'should create a directory and optimized file': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-temp'));
+        assert.isTrue(fs.existsSync('test/fixtures-temp/reset-min.css'));
+      },
+      teardown: function () {
+        exec('rm -rf test/fixtures-temp');
+      }
     })
   })
   .addBatch({

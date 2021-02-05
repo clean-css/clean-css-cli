@@ -349,6 +349,7 @@ function getSourceMapContent(sourceMapPath) {
 
 function output(process, outputPath, minified) {
   if (outputPath) {
+    fs.mkdirSync(path.dirname(outputPath), {recursive: true});
     fs.writeFileSync(outputPath, minified, 'utf8');
   } else {
     process.stdout.write(minified);
