@@ -116,21 +116,21 @@ clean-css-cli 4.3 introduces the following changes / features:
 ## CLI options
 
 ```shell
--h, --help                     output usage information
--v, --version                  output the version number
 -b, --batch                    If enabled, optimizes input files one by one instead of joining them together
 -c, --compatibility [ie7|ie8]  Force compatibility mode (see Readme for advanced examples)
 -d, --debug                    Shows debug information (minification time & compression efficiency)
 -f, --format <options>         Controls output formatting, see examples below
+-h, --help                     output usage information
 -o, --output [output-file]     Use [output-file] as output instead of STDOUT
 -O <n> [optimizations]         Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, IMPORTANT: the prefix is O (a capital o letter), NOT a 0 (zero, a number)
+-v, --version                  output the version number
 --inline [rules]               Enables inlining for listed sources (defaults to `local`)
 --inline-timeout [seconds]     Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)
+--input-source-map [file]      Specifies the path of the input source map file
 --remove-inlined-files         Remove files inlined in <source-file ...> or via `@import` statements
---skip-rebase                  Disable URLs rebasing
 --source-map                   Enables building input's source map
 --source-map-inline-sources    Enables inlining sources inside source maps
---input-source-map [file]      Specifies the path of the input source map file
+--with-rebase                  Disable URLs rebasing
 ```
 
 ## Compatibility modes

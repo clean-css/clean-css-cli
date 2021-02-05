@@ -21,100 +21,51 @@ function cli(process, beforeMinifyCallback) {
 
   // Specify commander options to parse command line params correctly
   program
-    .version(buildVersion, '-v, --version')
     .usage('[options] <source-file ...>')
     .option('-b, --batch', 'If enabled, optimizes input files one by one instead of joining them together')
     .option('-c, --compatibility [ie7|ie8]', 'Force compatibility mode (see Readme for advanced examples)')
     .option('-d, --debug', 'Shows debug information (minification time & compression efficiency)')
     .option('-f, --format <options>', 'Controls output formatting, see examples below')
+    .option('-h, --help', 'display this help')
     .option('-o, --output [output-file]', 'Use [output-file] as output instead of STDOUT')
     .option('-O <n> [optimizations]', 'Turn on level <n> optimizations; optionally accepts a list of fine-grained options, defaults to `1`, see examples below, IMPORTANT: the prefix is O (a capital o letter), NOT a 0 (zero, a number)', function (val) { return Math.abs(parseInt(val)); })
+    .version(buildVersion, '-v, --version')
     .option('--batch-suffix <suffix>', 'A suffix (without extension) appended to input file name when processing in batch mode (`-min` is the default)', '-min')
     .option('--inline [rules]', 'Enables inlining for listed sources (defaults to `local`)')
     .option('--inline-timeout [seconds]', 'Per connection timeout when fetching remote stylesheets (defaults to 5 seconds)', parseFloat)
+    .option('--input-source-map [file]', 'Specifies the path of the input source map file')
     .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
-    .option('--with-rebase', 'Enable URLs rebasing')
     .option('--source-map', 'Enables building input\'s source map')
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
-    .option('--input-source-map [file]', 'Specifies the path of the input source map file');
+    .option('--with-rebase', 'Enable URLs rebasing');
 
   program.on('--help', function () {
-    console.log('  Examples:\n');
-    console.log('    %> cleancss one.css');
-    console.log('    %> cleancss -o one-min.css one.css');
-    console.log('    %> cleancss -o merged-and-minified.css one.css two.css three.css');
-    console.log('    %> cleancss one.css two.css three.css | gzip -9 -c > merged-minified-and-gzipped.css.gz');
     console.log('');
-    console.log('  Formatting options:');
-    console.log('    %> cleancss --format beautify one.css');
-    console.log('    %> cleancss --format keep-breaks one.css');
-    console.log('    %> cleancss --format \'indentBy:1;indentWith:tab\' one.css');
-    console.log('    %> cleancss --format \'breaks:afterBlockBegins=on;spaces:aroundSelectorRelation=on\' one.css');
-    console.log('    %> cleancss --format \'breaks:afterBlockBegins=2;spaces:aroundSelectorRelation=on\' one.css');
-    console.log('    %> # `breaks` controls where to insert breaks');
-    console.log('    %> #   `afterAtRule` controls if a line break comes after an at-rule; e.g. `@charset`; defaults to `off` (alias to `false`); accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterBlockBegins` controls if a line break comes after a block begins; e.g. `@media`; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterBlockEnds` controls if a line break comes after a block ends, defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterComment` controls if a line break comes after a comment; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterProperty` controls if a line break comes after a property; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterRuleBegins` controls if a line break comes after a rule begins; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `afterRuleEnds` controls if a line break comes after a rule ends; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `beforeBlockEnds` controls if a line break comes before a block ends; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> #   `betweenSelectors` controls if a line break comes between selectors; defaults to `off`; accepts number of line breaks as an argument too');
-    console.log('    %> # `indentBy` controls number of characters to indent with; defaults to `0`');
-    console.log('    %> # `indentWith` controls a character to indent with, can be `space` or `tab`; defaults to `space`');
-    console.log('    %> # `spaces` controls where to insert spaces');
-    console.log('    %> #   `aroundSelectorRelation` controls if spaces come around selector relations; e.g. `div > a`; defaults to `off`');
-    console.log('    %> #   `beforeBlockBegins` controls if a space comes before a block begins; e.g. `.block {`; defaults to `off`');
-    console.log('    %> #   `beforeValue` controls if a space comes before a value; e.g. `width: 1rem`; defaults to `off`');
-    console.log('    %> # `wrapAt` controls maximum line length; defaults to `off`');
+    console.log('Examples:\n');
+    console.log('  %> cleancss one.css');
+    console.log('  %> cleancss -o one-min.css one.css');
+    console.log('  %> cleancss -o merged-and-minified.css one.css two.css three.css');
+    console.log('  %> cleancss one.css two.css three.css | gzip -9 -c > merged-minified-and-gzipped.css.gz');
     console.log('');
-    console.log('  Level 0 optimizations:');
-    console.log('    %> cleancss -O0 one.css');
+    console.log('Formatting options:');
+    console.log('  %> cleancss --format beautify one.css');
+    console.log('  %> cleancss --format keep-breaks one.css');
+    console.log('  %> cleancss --format \'indentBy:1;indentWith:tab\' one.css');
+    console.log('  %> cleancss --format \'breaks:afterBlockBegins=on;spaces:aroundSelectorRelation=on\' one.css');
+    console.log('  %> cleancss --format \'breaks:afterBlockBegins=2;spaces:aroundSelectorRelation=on\' one.css');
     console.log('');
-    console.log('  Level 1 optimizations:');
-    console.log('    %> cleancss -O1 one.css');
-    console.log('    %> cleancss -O1 removeQuotes:off;roundingPrecision:4;specialComments:1 one.css');
-    console.log('    %> cleancss -O1 all:off;specialComments:1 one.css');
-    console.log('    %> # `cleanupCharsets` controls `@charset` moving to the front of a stylesheet; defaults to `on`');
-    console.log('    %> # `normalizeUrls` controls URL normalzation; default to `on`');
-    console.log('    %> # `optimizeBackground` controls `background` property optimizatons; defaults to `on`');
-    console.log('    %> # `optimizeBorderRadius` controls `border-radius` property optimizatons; defaults to `on`');
-    console.log('    %> # `optimizeFilter` controls `filter` property optimizatons; defaults to `on`');
-    console.log('    %> # `optimizeFontWeight` controls `font-weight` property optimizatons; defaults to `on`');
-    console.log('    %> # `optimizeOutline` controls `outline` property optimizatons; defaults to `on`');
-    console.log('    %> # `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)');
-    console.log('    %> # `removeNegativePaddings` controls removing negative paddings; defaults to `on`');
-    console.log('    %> # `removeQuotes` controls removing quotes when unnecessary; defaults to `on`');
-    console.log('    %> # `removeWhitespace` controls removing unused whitespace; defaults to `on`');
-    console.log('    %> # `replaceMultipleZeros` contols removing redundant zeros; defaults to `on`');
-    console.log('    %> # `replaceTimeUnits` controls replacing time units with shorter values; defaults to `on');
-    console.log('    %> # `replaceZeroUnits` controls replacing zero values with units; defaults to `on`');
-    console.log('    %> # `roundingPrecision` rounds pixel values to `N` decimal places; `off` disables rounding; defaults to `off`');
-    console.log('    %> # `selectorsSortingMethod` denotes selector sorting method; can be `natural` or `standard`; defaults to `standard`');
-    console.log('    %> # `specialComments` denotes a number of /*! ... */ comments preserved; defaults to `all`');
-    console.log('    %> # `tidyAtRules` controls at-rules (e.g. `@charset`, `@import`) optimizing; defaults to `on`');
-    console.log('    %> # `tidyBlockScopes` controls block scopes (e.g. `@media`) optimizing; defaults to `on`');
-    console.log('    %> # `tidySelectors` controls selectors optimizing; defaults to `on`');
+    console.log('Level 0 optimizations:');
+    console.log('  %> cleancss -O0 one.css');
     console.log('');
-    console.log('  Level 2 optimizations:');
-    console.log('    %> cleancss -O2 one.css');
-    console.log('    %> cleancss -O2 mergeMedia:off;restructureRules:off;mergeSemantically:on;mergeIntoShorthands:off one.css');
-    console.log('    %> cleancss -O2 all:off;removeDuplicateRules:on one.css');
-    console.log('    %> # `mergeAdjacentRules` controls adjacent rules merging; defaults to `on`');
-    console.log('    %> # `mergeIntoShorthands` controls merging properties into shorthands; defaults to `on`');
-    console.log('    %> # `mergeMedia` controls `@media` merging; defaults to `on`');
-    console.log('    %> # `mergeNonAdjacentRules` controls non-adjacent rule merging; defaults to `on`');
-    console.log('    %> # `mergeSemantically` controls semantic merging; defaults to `off`');
-    console.log('    %> # `overrideProperties` controls property overriding based on understandability; defaults to `on`');
-    console.log('    %> # `reduceNonAdjacentRules` controls non-adjacent rule reducing; defaults to `on`');
-    console.log('    %> # `removeDuplicateFontRules` controls duplicate `@font-face` removing; defaults to `on`');
-    console.log('    %> # `removeDuplicateMediaBlocks` controls duplicate `@media` removing; defaults to `on`');
-    console.log('    %> # `removeDuplicateRules` controls duplicate rules removing; defaults to `on`');
-    console.log('    %> # `removeEmpty` controls removing empty rules and nested blocks; defaults to `on` (since 4.1.0)');
-    console.log('    %> # `removeUnusedAtRules` controls unused at rule removing; defaults to `off` (since 4.1.0)');
-    console.log('    %> # `restructureRules` controls rule restructuring; defaults to `off`');
-    console.log('    %> # `skipProperties` controls which properties won\'t be optimized, defaults to empty list which means all will be optimized (since 4.1.0)');
+    console.log('Level 1 optimizations:');
+    console.log('  %> cleancss -O1 one.css');
+    console.log('  %> cleancss -O1 removeQuotes:off;roundingPrecision:4;specialComments:1 one.css');
+    console.log('  %> cleancss -O1 all:off;specialComments:1 one.css');
+    console.log('');
+    console.log('Level 2 optimizations:');
+    console.log('  %> cleancss -O2 one.css');
+    console.log('  %> cleancss -O2 mergeMedia:off;restructureRules:off;mergeSemantically:on;mergeIntoShorthands:off one.css');
+    console.log('  %> cleancss -O2 all:off;removeDuplicateRules:on one.css');
 
     process.exit();
   });
