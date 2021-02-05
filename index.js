@@ -12,8 +12,6 @@ function cli(process, beforeMinifyCallback) {
   var packageConfig = fs.readFileSync(path.join(__dirname, 'package.json'));
   var buildVersion = JSON.parse(packageConfig).version;
   var fromStdin;
-  var debugMode;
-  var removeInlinedFiles;
   var inputOptions;
   var options;
   var stdin;
@@ -134,9 +132,6 @@ function cli(process, beforeMinifyCallback) {
   }
 
   // Now coerce arguments into CleanCSS configuration...
-  debugMode = inputOptions.debug;
-  removeInlinedFiles = inputOptions.removeInlinedFiles;
-
   options = {
     batch: inputOptions.batch,
     compatibility: inputOptions.compatibility,
@@ -175,8 +170,8 @@ function cli(process, beforeMinifyCallback) {
   var configurations = {
     batchSuffix: inputOptions.batchSuffix,
     beforeMinifyCallback: beforeMinifyCallback,
-    debugMode: debugMode,
-    removeInlinedFiles: removeInlinedFiles,
+    debugMode: inputOptions.debug,
+    removeInlinedFiles: inputOptions.removeInlinedFiles,
     inputSourceMap: inputOptions.inputSourceMap
   };
 
