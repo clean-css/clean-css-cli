@@ -29,7 +29,8 @@
     "bin",
     "History.md",
     "index.js",
-    "LICENSE"
+    "LICENSE",
+    "README.md"
   ],
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
