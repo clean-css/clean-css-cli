@@ -20,10 +20,10 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Install](#install)
 - [Use](#use)
   * [What's new in version 5.0](#whats-new-in-version-50)
-  * [Important: 4.0 breaking changes](#important-40-breaking-changes)
-  * [What's new in version 4.1](#whats-new-in-version-41)
-  * [What's new in version 4.2](#whats-new-in-version-42)
   * [What's new in version 4.3](#whats-new-in-version-43)
+  * [What's new in version 4.2](#whats-new-in-version-42)
+  * [What's new in version 4.1](#whats-new-in-version-41)
+  * [What's new in version 4.0](#whats-new-in-version-40)
   * [CLI options](#cli-options)
   * [Compatibility modes](#compatibility-modes)
   * [Formatting options](#formatting-options)
@@ -71,7 +71,30 @@ clean-css-cli 5.0 introduces the following changes / features:
 * `--skip-rebase` option has been removed as rebasing URLs is disabled by default now
 * `--with-rebase` option is added if you really want URLs rebasing
 
-## Important: 4.0 breaking changes
+## What's new in version 4.3
+
+clean-css-cli 4.3 introduces the following changes / features:
+
+* `--input-source-map` option which accepts a path to input source map file.
+
+## What's new in version 4.2
+
+clean-css-cli 4.2 introduces the following changes / features:
+
+* [clean-css 4.2](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-42) as a dependency;
+
+## What's new in version 4.1
+
+clean-css-cli 4.1 introduces the following changes / features:
+
+* [clean-css 4.1](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-41) as a dependency;
+* `--remove-inlined-files` option for removing files inlined in <source-file ...> or via `@import` statements;
+* adds glob pattern matching to source paths, see [example](#how-to-optimize-multiple-files);
+* allows non-boolean compatibility options, e.g. `--compatibility selectors.mergeLimit=512`;
+* extracts CLI into an importable module, so it can be reused and enhanced if needed;
+* adds `beforeMinify` callback as a second argument to CLI module, see [example use case](#as-a-module).
+
+## What's new in version 4.0
 
 clean-css-cli 4.0 introduces some breaking changes:
 
@@ -88,29 +111,6 @@ clean-css-cli 4.0 introduces some breaking changes:
 * level 1 optimizations are the new default, up to 3.x it was level 2;
 * `--keep-breaks` option is replaced with `--format keep-breaks` to ease transition;
 * `--skip-aggressive-merging` option is removed as aggressive merging is replaced by smarter override merging.
-
-## What's new in version 4.1
-
-clean-css-cli 4.1 introduces the following changes / features:
-
-* [clean-css 4.1](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-41) as a dependency;
-* `--remove-inlined-files` option for removing files inlined in <source-file ...> or via `@import` statements;
-* adds glob pattern matching to source paths, see [example](#how-to-optimize-multiple-files);
-* allows non-boolean compatibility options, e.g. `--compatibility selectors.mergeLimit=512`;
-* extracts CLI into an importable module, so it can be reused and enhanced if needed;
-* adds `beforeMinify` callback as a second argument to CLI module, see [example use case](#as-a-module).
-
-## What's new in version 4.2
-
-clean-css-cli 4.2 introduces the following changes / features:
-
-* [clean-css 4.2](https://github.com/jakubpawlowicz/clean-css#whats-new-in-version-42) as a dependency;
-
-## What's new in version 4.3
-
-clean-css-cli 4.3 introduces the following changes / features:
-
-* `--input-source-map` option which accepts a path to input source map file.
 
 ## CLI options
 
