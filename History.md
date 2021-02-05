@@ -1,6 +1,7 @@
 [5.0.0 / 2021-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.3...HEAD)
 ==================
 
+* Adds `--batch-suffix` option to specify what gets appended to output filename in batch mode.
 * Bumps clean-css dependency to 5.0.
 * Bumps commander dependency to 7.0.
 * Fixed issue [#18](https://github.com/jakubpawlowicz/clean-css-cli/issues/18) - allows batch processing of input files.

@@ -65,6 +65,7 @@ cleancss -o one.min.css one.css
 clean-css-cli 5.0 introduces the following changes / features:
 
 * adds `--batch` option (off by default) which processes input files one by one without joining them together;
+* adds `--batch-suffix` option to specify what gets appended to output filename in batch mode;
 * clean-css 5.0 with loads of bugfixes;
 * drops official support for Node.js 4, 6, and 8;
 * `--skip-rebase` option has been removed as rebasing URLs is disabled by default now

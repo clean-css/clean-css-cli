@@ -777,4 +777,21 @@ vows.describe('cleancss')
       }
     })
   })
+  .addBatch({
+    'batch processing with custom suffix': binaryContext('--batch --batch-suffix \'.min\' ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+      'creates two separate minified files': function () {
+        assert.isFalse(fs.existsSync('test/fixtures/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/partials/five-min.css'));
+
+        assert.isTrue(fs.existsSync('test/fixtures/partials/one.min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/partials/two.min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/five.min.css'));
+      },
+      'teardown': function () {
+        deleteFile('test/fixtures/partials/one.min.css');
+        deleteFile('test/fixtures/partials/five.min.css');
+      }
+    })
+  })
   .export(module);
