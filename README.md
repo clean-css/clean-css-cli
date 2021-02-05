@@ -368,7 +368,7 @@ which sets all units rounding precision to 3 digits except `px` unit precision o
 
 ## How to rebase relative image URLs?
 
-clean-css-cli will handle it automatically for you when full paths to input files are passed in and `--output` option is used, e.g
+clean-css-cli will rebase paths it automatically for you when full paths to input files are passed, and `--with-rebase` & `--output` options are used, e.g
 
 ```css
 /*! one.css */
@@ -378,7 +378,7 @@ a {
 ```
 
 ```shell
-cleancss -o build/one.min.css one.css
+cleancss --with-rebase -o build/one.min.css one.css
 ```
 
 ```css
