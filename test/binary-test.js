@@ -719,7 +719,7 @@ vows.describe('cleancss')
   })
   .addBatch({
     'content of input-source-map': pipedContext(fs.readFileSync('./test/fixtures/source-maps/map/styles.css'), '-o ./test/styles.min.css --input-source-map ./test/fixtures/source-maps/map/input.map', {
-      'includes the right content of the source map': function() {
+      'processes content normally': function() {
         assert.isTrue(fs.existsSync('test/styles.min.css.map'));
         var sourceMap = new SourceMapConsumer(fs.readFileSync('./test/styles.min.css.map', 'utf-8'));
 
@@ -736,6 +736,44 @@ vows.describe('cleancss')
       'teardown': function () {
         deleteFile('test/styles.min.css');
         deleteFile('test/styles.min.css.map');
+      }
+    })
+  })
+  .addBatch({
+    'batch processing in piped mode': pipedContext(fs.readFileSync('./test/fixtures/partials/one.css'), '-b', {
+      'includes the right content of the source map': function (error, stdout) {
+        assert.equal(stdout, '.one{color:red}');
+      }
+    }),
+    'batch processing with explicitely given paths': binaryContext('-b ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+      'creates two separate minified files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+      },
+      'teardown': function () {
+        deleteFile('test/fixtures/partials/one-min.css');
+        deleteFile('test/fixtures/partials/five-min.css');
+      }
+    })
+  })
+  .addBatch({
+    'batch processing with wildard paths': binaryContext('-b ./test/fixtures/partials/\\*\\*/*.css', {
+      'creates two separate minified files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures/partials/extra/four-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/extra/three-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/quoted-svg-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+      },
+      'teardown': function () {
+        deleteFile('test/fixtures/partials/extra/four-min.css');
+        deleteFile('test/fixtures/partials/extra/three-min.css');
+        deleteFile('test/fixtures/partials/one-min.css');
+        deleteFile('test/fixtures/partials/two-min.css');
+        deleteFile('test/fixtures/partials/quoted-svg-min.css');
+        deleteFile('test/fixtures/partials/five-min.css');
       }
     })
   })

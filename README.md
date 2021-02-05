@@ -64,6 +64,7 @@ cleancss -o one.min.css one.css
 
 clean-css-cli 5.0 introduces the following changes / features:
 
+* adds `--batch` option (off by default) which processes input files one by one without joining them together;
 * clean-css 5.0 with loads of bugfixes;
 * drops official support for Node.js 4, 6, and 8;
 * `--skip-rebase` option has been removed as rebasing URLs is disabled by default now
@@ -115,6 +116,7 @@ clean-css-cli 4.3 introduces the following changes / features:
 ```shell
 -h, --help                     output usage information
 -v, --version                  output the version number
+-b, --batch                    If enabled, optimizes input files one by one instead of joining them together
 -c, --compatibility [ie7|ie8]  Force compatibility mode (see Readme for advanced examples)
 -d, --debug                    Shows debug information (minification time & compression efficiency)
 -f, --format <options>         Controls output formatting, see examples below

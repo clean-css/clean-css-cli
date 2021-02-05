@@ -25,6 +25,7 @@ function cli(process, beforeMinifyCallback) {
   program
     .version(buildVersion, '-v, --version')
     .usage('[options] <source-file ...>')
+    .option('-b, --batch', 'If enabled, optimizes input files one by one instead of joining them together')
     .option('-c, --compatibility [ie7|ie8]', 'Force compatibility mode (see Readme for advanced examples)')
     .option('-d, --debug', 'Shows debug information (minification time & compression efficiency)')
     .option('-f, --format <options>', 'Controls output formatting, see examples below')
@@ -136,6 +137,7 @@ function cli(process, beforeMinifyCallback) {
   removeInlinedFiles = inputOptions.removeInlinedFiles;
 
   options = {
+    batch: inputOptions.batch,
     compatibility: inputOptions.compatibility,
     format: inputOptions.format,
     inline: typeof inputOptions.inline == 'string' ? inputOptions.inline : 'local',
@@ -232,41 +234,63 @@ function minify(process, options, configurations, data) {
   applyNonBooleanCompatibilityFlags(cleanCss, options.compatibility);
   configurations.beforeMinifyCallback(cleanCss);
   cleanCss.minify(data, getSourceMapContent(configurations.inputSourceMap), function (errors, minified) {
-    var mapFilename;
+    var inputPath;
 
-    if (configurations.debugMode) {
-      console.error('Original: %d bytes', minified.stats.originalSize);
-      console.error('Minified: %d bytes', minified.stats.minifiedSize);
-      console.error('Efficiency: %d%', ~~(minified.stats.efficiency * 10000) / 100.0);
-      console.error('Time spent: %dms', minified.stats.timeSpent);
-
-      if (minified.inlinedStylesheets.length > 0) {
-        console.error('Inlined stylesheets:');
-        minified.inlinedStylesheets.forEach(function (uri) {
-          console.error('- %s', uri);
-        });
+    if (options.batch && !('styles' in minified)) {
+      for (inputPath in minified) {
+        processMinified(process, configurations, minified[inputPath], inputPath, toOutputPath(inputPath));
       }
-    }
-
-    outputFeedback(minified.errors, true);
-    outputFeedback(minified.warnings);
-
-    if (minified.errors.length > 0) {
-      process.exit(1);
-    }
-
-    if (configurations.removeInlinedFiles) {
-      minified.inlinedStylesheets.forEach(fs.unlinkSync);
-    }
-
-    if (minified.sourceMap) {
-      mapFilename = path.basename(options.output) + '.map';
-      output(process, options, minified.styles + lineBreak + '/*# sourceMappingURL=' + mapFilename + ' */');
-      outputMap(options, minified.sourceMap, mapFilename);
     } else {
-      output(process, options, minified.styles);
+      processMinified(process, configurations, minified, null, options.output);
     }
   });
+}
+
+function toOutputPath(inputPath) {
+  return inputPath.replace(/\.css$/, '-min.css');
+}
+
+function processMinified(process, configurations, minified, inputPath, outputPath) {
+  var mapOutputPath;
+
+  if (configurations.debugMode) {
+    if (inputPath) {
+      console.error('File: %s', inputPath);
+    }
+
+    console.error('Original: %d bytes', minified.stats.originalSize);
+    console.error('Minified: %d bytes', minified.stats.minifiedSize);
+    console.error('Efficiency: %d%', ~~(minified.stats.efficiency * 10000) / 100.0);
+    console.error('Time spent: %dms', minified.stats.timeSpent);
+
+    if (minified.inlinedStylesheets.length > 0) {
+      console.error('Inlined stylesheets:');
+      minified.inlinedStylesheets.forEach(function (uri) {
+        console.error('- %s', uri);
+      });
+    }
+
+    console.error('');
+  }
+
+  outputFeedback(minified.errors, true);
+  outputFeedback(minified.warnings);
+
+  if (minified.errors.length > 0) {
+    process.exit(1);
+  }
+
+  if (configurations.removeInlinedFiles) {
+    minified.inlinedStylesheets.forEach(fs.unlinkSync);
+  }
+
+  if (minified.sourceMap) {
+    mapOutputPath = outputPath + '.map';
+    output(process, outputPath, minified.styles + lineBreak + '/*# sourceMappingURL=' + path.basename(mapOutputPath) + ' */');
+    outputMap(mapOutputPath, minified.sourceMap);
+  } else {
+    output(process, outputPath, minified.styles);
+  }
 }
 
 function applyNonBooleanCompatibilityFlags(cleanCss, compatibility) {
@@ -319,17 +343,16 @@ function getSourceMapContent(sourceMapPath) {
   return content;
 }
 
-function output(process, options, minified) {
-  if (options.output) {
-    fs.writeFileSync(options.output, minified, 'utf8');
+function output(process, outputPath, minified) {
+  if (outputPath) {
+    fs.writeFileSync(outputPath, minified, 'utf8');
   } else {
     process.stdout.write(minified);
   }
 }
 
-function outputMap(options, sourceMap, mapFilename) {
-  var mapPath = path.join(path.dirname(options.output), mapFilename);
-  fs.writeFileSync(mapPath, sourceMap.toString(), 'utf-8');
+function outputMap(mapOutputPath, sourceMap) {
+  fs.writeFileSync(mapOutputPath, sourceMap.toString(), 'utf-8');
 }
 
 module.exports = cli;
