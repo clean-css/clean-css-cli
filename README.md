@@ -329,12 +329,20 @@ clean-css-cli can also be used as a module in a way of enhancing its functionali
 
 var cleanCssCli = require('clean-css-cli');
 
-return cleanCssCli(process, function beforeMinify(cleanCss) {
-  cleanCss.options.level['1'].transform = function (propertyName, propertyValue) {
-    if (propertyName == 'background-image' && propertyValue.indexOf('../valid/path/to') == -1) {
-      return propertyValue.replace('url(', 'url(../valid/path/to/');
+var customPlugin = {
+  level1: {
+    value: function (propertyName, propertyValue, options) {
+      if (propertyName == 'background-image' && propertyValue.indexOf('../valid/path/to') == -1) {
+        return propertyValue.replace('url(', 'url(../valid/path/to/');
+      } else {
+        return propertyValue;
+      }
     }
   }
+}
+
+return cleanCssCli(process, function (cleanCss) {
+  cleanCss.options.plugins.level1Value.push(customPlugin.level1.value);
 });
 ```
 
