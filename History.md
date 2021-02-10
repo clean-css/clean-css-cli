@@ -1,4 +1,4 @@
-[5.0.0 / 2021-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.3...HEAD)
+[5.0.0 / 2021-02-10](https://github.com/jakubpawlowicz/clean-css-cli/compare/4.3...v5.0.0)
 ==================
 
 * Adds `--batch-suffix` option to specify what gets appended to output filename in batch mode.
