@@ -130,7 +130,7 @@ clean-css-cli 4.0 introduces some breaking changes:
 --remove-inlined-files         Remove files inlined in <source-file ...> or via `@import` statements
 --source-map                   Enables building input's source map
 --source-map-inline-sources    Enables inlining sources inside source maps
---with-rebase                  Disable URLs rebasing
+--with-rebase                  Enables URLs rebasing
 ```
 
 ## Compatibility modes
