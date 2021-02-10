@@ -803,4 +803,20 @@ vows.describe('cleancss')
       }
     })
   })
+  .addBatch({
+    'batch processing with output given': binaryContext('-b -o ./test ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+      'does not produce any errors': function (error) {
+        assert.equal(error, '');
+      },
+      'creates two separate minified files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+      },
+      'teardown': function () {
+        deleteFile('test/fixtures/partials/one-min.css');
+        deleteFile('test/fixtures/partials/five-min.css');
+      }
+    })
+  })
   .export(module);
