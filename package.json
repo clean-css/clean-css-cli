@@ -19,7 +19,7 @@
   "bin": {
     "cleancss": "./bin/cleancss"
   },
-  "author": "Jakub Pawlowicz <contact@jakubpawlowicz.com> (http://twitter.com/jakubpawlowicz)",
+  "author": "Jakub Pawlowicz <contact@jakubpawlowicz.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jakubpawlowicz/clean-css-cli/issues"
