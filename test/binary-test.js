@@ -663,15 +663,15 @@ vows.describe('cleancss')
       'topic': function() {
         var self = this;
 
-        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
-          exec('__DIRECT__=1 ./bin/cleancss test/fixtures/reset-removing.css', self.callback);
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing-1.css', function () {
+          exec('__DIRECT__=1 ./bin/cleancss test/fixtures/reset-removing-1.css', self.callback);
         });
       },
       'keeps the file': function () {
-        assert.isTrue(fs.existsSync('test/fixtures/reset-removing.css'));
+        assert.isTrue(fs.existsSync('test/fixtures/reset-removing-1.css'));
       },
       'teardown': function () {
-        deleteFile('test/fixtures/reset-removing.css');
+        deleteFile('test/fixtures/reset-removing-1.css');
       }
     }
   })
@@ -680,12 +680,12 @@ vows.describe('cleancss')
       'topic': function() {
         var self = this;
 
-        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
-          exec('__DIRECT__=1 ./bin/cleancss --remove-inlined-files test/fixtures/reset-removing.css', self.callback);
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing-2.css', function () {
+          exec('__DIRECT__=1 ./bin/cleancss --remove-inlined-files test/fixtures/reset-removing-2.css', self.callback);
         });
       },
       'removes the file': function () {
-        assert.isFalse(fs.existsSync('test/fixtures/reset-removing.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/reset-removing-2.css'));
       }
     }
   })
@@ -694,12 +694,12 @@ vows.describe('cleancss')
       'topic': function() {
         var self = this;
 
-        exec('cp test/fixtures/reset.css test/fixtures/reset-removing.css', function () {
-          exec('echo "@import \'test/fixtures/reset-removing.css\';" | ./bin/cleancss --remove-inlined-files', self.callback);
+        exec('cp test/fixtures/reset.css test/fixtures/reset-removing-3.css', function () {
+          exec('echo "@import \'test/fixtures/reset-removing-3.css\';" | ./bin/cleancss --remove-inlined-files', self.callback);
         });
       },
       'removes the file': function () {
-        assert.isFalse(fs.existsSync('test/fixtures/reset-removing.css'));
+        assert.isFalse(fs.existsSync('test/fixtures/reset-removing-3.css'));
       }
     }
   })
