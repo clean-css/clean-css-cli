@@ -45,7 +45,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 
 # Node.js version support
 
-clean-css-cli requires Node.js 10.0+ (tested on Linux, OS X, and Windows)
+clean-css-cli requires Node.js 10.0+ (tested on Linux)
 
 # Install
 
