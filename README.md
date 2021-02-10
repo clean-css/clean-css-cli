@@ -35,6 +35,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
   * [As a module](#as-a-module)
 - [FAQ](#faq)
   * [How to optimize multiple files?](#how-to-optimize-multiple-files)
+  * [How to process multiple files without concatenating them into one output file?](#how-to-process-multiple-files-without-concatenating-them-into-one-output-file)
   * [How to specify a custom rounding precision?](#how-to-specify-a-custom-rounding-precision)
   * [How to rebase relative image URLs?](#how-to-rebase-relative-image-urls)
   * [How to apply level 1 & 2 optimizations at the same time?](#how-to-apply-level-1--2-optimizations-at-the-same-time)
@@ -363,6 +364,24 @@ Since version 4.1.0 it can also be done using glob pattern matching, e.g.
 ```shell
 cleancss -o merged.min.css *.css
 ```
+
+## How to process multiple files without concatenating them into one output file?
+
+Since clean-css-cli 5.0 you can optimize files one by one, without joining them into one output file, e.g.
+
+```shell
+cleancss --batch styles/*.css
+```
+
+By default it will pick up every single file from `styles` directory, optimize it, add a `-min` suffix to filename (before extension), and write it to disk.
+
+You can use `--batch-suffix` option to customize the `-min` suffix, e.g.
+
+```shell
+cleancss --batch --batch-suffix '.min' styles/*.css
+```
+
+Remember you can use [glob matching](https://www.npmjs.com/package/glob#glob-primer) to match exactly the files you want.
 
 ## How to specify a custom rounding precision?
 
