@@ -19,6 +19,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Node.js version support](#nodejs-version-support)
 - [Install](#install)
 - [Use](#use)
+  * [What's new in version 5.1](#whats-new-in-version-51)
   * [What's new in version 5.0](#whats-new-in-version-50)
   * [What's new in version 4.3](#whats-new-in-version-43)
   * [What's new in version 4.2](#whats-new-in-version-42)
@@ -59,6 +60,12 @@ Note: Global install via -g option is recommended unless you want to execute the
 ```shell
 cleancss -o one.min.css one.css
 ```
+
+## What's new in version 5.1
+
+clean-css-cli 5.1 will introduce the following changes / features:
+
+* accept `!path/to/file` as a way of telling `cleancss` to ignore such file, also accepts any available glob patterns.
 
 ## What's new in version 5.0
 
@@ -382,6 +389,12 @@ cleancss --batch --batch-suffix '.min' styles/*.css
 ```
 
 Remember you can use [glob matching](https://www.npmjs.com/package/glob#glob-primer) to match exactly the files you want.
+
+Since clean-css-cli 5.1 you can also use a negated pattern to exclude some files from being matched, e.g.
+
+```shell
+cleancss --batch styles/*.css !styles/*.min.css
+```
 
 ## How to specify a custom rounding precision?
 

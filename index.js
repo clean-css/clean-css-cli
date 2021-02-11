@@ -173,8 +173,13 @@ function findArgumentTo(option, rawArgs, args) {
 }
 
 function expandGlobs(paths) {
-  return paths.reduce(function (accumulator, path) {
-    return accumulator.concat(glob.sync(path, { nodir: true, nonull: true}));
+  var globPatterns = paths.filter(function (path) { return path[0] != '!'; });
+  var ignoredGlobPatterns = paths
+    .filter(function (path) { return path[0] == '!'; })
+    .map(function (path) { return path.substring(1); });
+
+  return globPatterns.reduce(function (accumulator, path) {
+    return accumulator.concat(glob.sync(path, { ignore: ignoredGlobPatterns, nodir: true, nonull: true }));
   }, []);
 }
 

@@ -861,4 +861,22 @@ vows.describe('cleancss')
       }
     })
   })
+  .addBatch({
+    'batch processing with wildcard and exclude paths': binaryContext('-b ./test/fixtures-batch-5/partials/\\*\\*/*.css !./test/fixtures-batch-5/partials/one* !./test/fixtures-batch-5/partials/fiv?.css', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-5');
+      },
+      'creates two separate minified files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-batch-5/partials/extra/four-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-5/partials/extra/three-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-5/partials/one-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-5/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-5/partials/quoted-svg-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-5/partials/five-min.css'));
+      },
+      'teardown': function () {
+        execSync('rm -fr test/fixtures-batch-5');
+      }
+    })
+  })
   .export(module);
