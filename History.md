@@ -1,4 +1,4 @@
-[5.0.1 / 2021-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/v5.0.0...5.0)
+[5.0.1 / 2021-02-11](https://github.com/jakubpawlowicz/clean-css-cli/compare/v5.0.0...v5.0.1)
 ==================
 
 * Fixed issue [#54](https://github.com/jakubpawlowicz/clean-css-cli/issues/54) - rebasing is still on if output option is used.
