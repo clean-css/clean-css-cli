@@ -248,7 +248,7 @@ vows.describe('cleancss')
           assert.equal(stdout, 'a{background:url(../partials/extra/down.gif) 0 0 no-repeat}');
         }
       }),
-      'output': binaryContext('-o ./base1-min.css ./test/fixtures/partials-relative/base.css', {
+      'output': binaryContext('--with-rebase -o ./base1-min.css ./test/fixtures/partials-relative/base.css', {
         'should rewrite path relative to current path': function () {
           var minimized = fs.readFileSync('./base1-min.css', 'utf-8');
           assert.equal(minimized, 'a{background:url(test/fixtures/partials/extra/down.gif) 0 0 no-repeat}');
@@ -301,11 +301,25 @@ vows.describe('cleancss')
   .addBatch({
     'complex import and skipped url rebasing': {
       'absolute': binaryContext('./test/fixtures/rebasing/assets/ui.css', {
-        'should rebase urls correctly': function (error, stdout) {
+        'should not rebase urls': function (error, stdout) {
           assert.isNull(error);
           assert.include(stdout, 'url(../images/glyphs.gif)');
           assert.include(stdout, 'url(../images/prev.gif)');
           assert.include(stdout, 'url(../images/next.gif)');
+        }
+      })
+    },
+    'complex import, skipped url rebasing, and output file': {
+      'absolute': binaryContext('-o ./test/ui-no-rebase.min.css ./test/fixtures/rebasing/assets/ui.css', {
+        'should not rebase urls': function () {
+          var minimized = fs.readFileSync('./test/ui-no-rebase.min.css', 'utf-8');
+
+          assert.include(minimized, 'url(../images/glyphs.gif)');
+          assert.include(minimized, 'url(../images/prev.gif)');
+          assert.include(minimized, 'url(../images/next.gif)');
+        },
+        teardown: function () {
+          deleteFile('test/ui-no-rebase.min.css');
         }
       })
     }
@@ -545,7 +559,27 @@ vows.describe('cleancss')
     }
   })
   .addBatch({
-    'source maps - output file with existing map': binaryContext('--source-map -o ./styles.min.css ./test/fixtures/source-maps/styles.css', {
+    'source maps - output file with existing map and no rebasing': binaryContext('--source-map -o ./styles.min.css ./test/fixtures/source-maps/styles.css', {
+      'includes right content in map file': function () {
+        var sourceMap = new SourceMapConsumer(fs.readFileSync('./styles.min.css.map', 'utf-8'));
+        assert.deepEqual(
+          sourceMap.originalPositionFor({ line: 1, column: 1 }),
+          {
+            source: 'test/fixtures/source-maps/styles.css',
+            line: 1,
+            column: 0,
+            name: null
+          }
+        );
+      },
+      'teardown': function () {
+        deleteFile('styles.min.css');
+        deleteFile('styles.min.css.map');
+      }
+    })
+  })
+  .addBatch({
+    'source maps - output file with existing map': binaryContext('--source-map --with-rebase -o ./styles.min.css ./test/fixtures/source-maps/styles.css', {
       'includes right content in map file': function () {
         var sourceMap = new SourceMapConsumer(fs.readFileSync('./styles.min.css.map', 'utf-8'));
         assert.deepEqual(
@@ -565,7 +599,7 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
-    'source maps - output file for existing map in different folder': binaryContext('--source-map -o ./styles-relative.min.css ./test/fixtures/source-maps/relative.css', {
+    'source maps - output file for existing map in different folder': binaryContext('--source-map --with-rebase -o ./styles-relative.min.css ./test/fixtures/source-maps/relative.css', {
       'includes right content in map file': function () {
         var sourceMap = new SourceMapConsumer(fs.readFileSync('./styles-relative.min.css.map', 'utf-8'));
         assert.deepEqual(
