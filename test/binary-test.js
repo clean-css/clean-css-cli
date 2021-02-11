@@ -14,6 +14,7 @@ var vows = require('vows');
 function binaryContext(options, context) {
   context.topic = function () {
     (context.setup || Function.prototype)();
+    delete context.setup;
 
     // We add __DIRECT__=1 to force binary into 'non-piped' mode
     exec('__DIRECT__=1 ./bin/cleancss ' + options, this.callback);
