@@ -35,13 +35,13 @@
   "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
   "dependencies": {
     "clean-css": "^5.0.1",
-    "commander": "7.x",
+    "commander": "^7.0.0",
     "glob": "^7.1.6"
   },
   "devDependencies": {
-    "http-proxy": "1.x",
+    "http-proxy": "^1.18.1",
     "jshint": "^2.12.0",
-    "source-map": "0.5.x",
+    "source-map": "^0.5.7",
     "vows": "^0.8.3"
   },
   "engines": {
