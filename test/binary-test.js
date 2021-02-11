@@ -1,5 +1,6 @@
 var assert = require('assert');
 var exec = require('child_process').exec;
+var execSync = require('child_process').execSync;
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
@@ -12,6 +13,8 @@ var vows = require('vows');
 
 function binaryContext(options, context) {
   context.topic = function () {
+    (context.setup || Function.prototype)();
+
     // We add __DIRECT__=1 to force binary into 'non-piped' mode
     exec('__DIRECT__=1 ./bin/cleancss ' + options, this.callback);
   };
@@ -788,68 +791,72 @@ vows.describe('cleancss')
         assert.equal(stdout, '.one{color:red}');
       }
     }),
-    'batch processing with explicitely given paths': binaryContext('-b ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+    'batch processing with explicitely given paths': binaryContext('-b ./test/fixtures-batch-1/partials/one.css ./test/fixtures-batch-1/partials/five.css', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-1');
+      },
       'creates two separate minified files': function () {
-        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
-        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-1/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-1/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-1/partials/five-min.css'));
       },
       'teardown': function () {
-        deleteFile('test/fixtures/partials/one-min.css');
-        deleteFile('test/fixtures/partials/five-min.css');
+        execSync('rm -fr test/fixtures-batch-1');
       }
     })
   })
   .addBatch({
-    'batch processing with wildard paths': binaryContext('-b ./test/fixtures/partials/\\*\\*/*.css', {
+    'batch processing with wildard paths': binaryContext('-b ./test/fixtures-batch-2/partials/\\*\\*/*.css', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-2');
+      },
       'creates two separate minified files': function () {
-        assert.isTrue(fs.existsSync('test/fixtures/partials/extra/four-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/extra/three-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/two-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/quoted-svg-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/extra/four-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/extra/three-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/one-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/quoted-svg-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-2/partials/five-min.css'));
       },
       'teardown': function () {
-        deleteFile('test/fixtures/partials/extra/four-min.css');
-        deleteFile('test/fixtures/partials/extra/three-min.css');
-        deleteFile('test/fixtures/partials/one-min.css');
-        deleteFile('test/fixtures/partials/two-min.css');
-        deleteFile('test/fixtures/partials/quoted-svg-min.css');
-        deleteFile('test/fixtures/partials/five-min.css');
+        execSync('rm -fr test/fixtures-batch-2');
       }
     })
   })
   .addBatch({
-    'batch processing with custom suffix': binaryContext('--batch --batch-suffix \'.min\' ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+    'batch processing with custom suffix': binaryContext('--batch --batch-suffix \'.min\' ./test/fixtures-batch-3/partials/one.css ./test/fixtures-batch-3/partials/five.css', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-3');
+      },
       'creates two separate minified files': function () {
-        assert.isFalse(fs.existsSync('test/fixtures/partials/one-min.css'));
-        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
-        assert.isFalse(fs.existsSync('test/fixtures/partials/five-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-3/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-3/partials/two-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-3/partials/five-min.css'));
 
-        assert.isTrue(fs.existsSync('test/fixtures/partials/one.min.css'));
-        assert.isFalse(fs.existsSync('test/fixtures/partials/two.min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/five.min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-3/partials/one.min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-3/partials/two.min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-3/partials/five.min.css'));
       },
       'teardown': function () {
-        deleteFile('test/fixtures/partials/one.min.css');
-        deleteFile('test/fixtures/partials/five.min.css');
+        execSync('rm -fr test/fixtures-batch-3');
       }
     })
   })
   .addBatch({
-    'batch processing with output given': binaryContext('-b -o ./test ./test/fixtures/partials/one.css ./test/fixtures/partials/five.css', {
+    'batch processing with output given': binaryContext('-b -o ./test ./test/fixtures-batch-4/partials/one.css ./test/fixtures-batch-4/partials/five.css', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-4');
+      },
       'does not produce any errors': function (error) {
         assert.equal(error, '');
       },
       'creates two separate minified files': function () {
-        assert.isTrue(fs.existsSync('test/fixtures/partials/one-min.css'));
-        assert.isFalse(fs.existsSync('test/fixtures/partials/two-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures/partials/five-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-4/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-4/partials/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-4/partials/five-min.css'));
       },
       'teardown': function () {
-        deleteFile('test/fixtures/partials/one-min.css');
-        deleteFile('test/fixtures/partials/five-min.css');
+        execSync('rm -fr test/fixtures-batch-4');
       }
     })
   })
