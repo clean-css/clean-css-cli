@@ -92,7 +92,9 @@ function cli(process, beforeMinifyCallback) {
     level: { 1: true },
     output: inputOptions.output,
     rebase: inputOptions.withRebase ? true : false,
-    rebaseTo: ('output' in inputOptions) && inputOptions.output.length > 0 ? path.dirname(path.resolve(inputOptions.output)) : (inputOptions.withRebase ? process.cwd() : undefined),
+    rebaseTo: inputOptions.withRebase && ('output' in inputOptions) && inputOptions.output.length > 0 ?
+      path.dirname(path.resolve(inputOptions.output)) :
+      (inputOptions.withRebase ? process.cwd() : undefined),
     sourceMap: inputOptions.sourceMap,
     sourceMapInlineSources: inputOptions.sourceMapInlineSources
   };
