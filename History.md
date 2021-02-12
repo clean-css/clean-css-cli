@@ -1,4 +1,4 @@
-[5.1.0 / 2021-xx-xx](https://github.com/jakubpawlowicz/clean-css-cli/compare/5.0...HEAD)
+[5.1.0 / 2021-02-12](https://github.com/jakubpawlowicz/clean-css-cli/compare/5.0...v5.1.0)
 ==================
 
 * Fixed issue [#51](https://github.com/jakubpawlowicz/clean-css-cli/issues/51) - excluding files via glob negated pattern.

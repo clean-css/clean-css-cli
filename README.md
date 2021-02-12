@@ -63,7 +63,7 @@ cleancss -o one.min.css one.css
 
 ## What's new in version 5.1
 
-clean-css-cli 5.1 will introduce the following changes / features:
+clean-css-cli 5.1 introduces the following changes / features:
 
 * accept `!path/to/file` as a way of telling `cleancss` to ignore such file, also accepts any available glob patterns.
 
