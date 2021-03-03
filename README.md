@@ -385,7 +385,13 @@ By default it will pick up every single file from `styles` directory, optimize i
 You can use `--batch-suffix` option to customize the `-min` suffix, e.g.
 
 ```shell
-cleancss --batch --batch-suffix '.min' styles/*.css
+cleancss --batch --batch-suffix '.min' styles/*.css # output will have `.min` suffix before `.css`, e.g. styles.min.css
+```
+
+or
+
+```shell
+cleancss --batch --batch-suffix '' styles/*.css # output files will OVERRIDE input files
 ```
 
 Remember you can use [glob matching](https://www.npmjs.com/package/glob#glob-primer) to match exactly the files you want.
