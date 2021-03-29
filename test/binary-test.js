@@ -844,7 +844,7 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
-    'batch processing with output given': binaryContext('-b -o ./test ./test/fixtures-batch-4/partials/one.css ./test/fixtures-batch-4/partials/five.css', {
+    'batch processing with output given': binaryContext('-b -o ./test/fixtures-batch-4-output ./test/fixtures-batch-4/partials/one.css ./test/fixtures-batch-4/partials/five.css', {
       'setup': function () {
         execSync('cp -fr test/fixtures test/fixtures-batch-4');
       },
@@ -852,12 +852,17 @@ vows.describe('cleancss')
         assert.equal(error, '');
       },
       'creates two separate minified files': function () {
-        assert.isTrue(fs.existsSync('test/fixtures-batch-4/partials/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-4/partials/one-min.css'));
         assert.isFalse(fs.existsSync('test/fixtures-batch-4/partials/two-min.css'));
-        assert.isTrue(fs.existsSync('test/fixtures-batch-4/partials/five-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-4/partials/five-min.css'));
+
+        assert.isTrue(fs.existsSync('test/fixtures-batch-4-output/one-min.css'));
+        assert.isFalse(fs.existsSync('test/fixtures-batch-4-output/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-4-output/five-min.css'));
       },
       'teardown': function () {
         execSync('rm -fr test/fixtures-batch-4');
+        execSync('rm -fr test/fixtures-batch-4-output');
       }
     })
   })
@@ -876,6 +881,25 @@ vows.describe('cleancss')
       },
       'teardown': function () {
         execSync('rm -fr test/fixtures-batch-5');
+      }
+    })
+  })
+  .addBatch({
+    'batch processing with output as a path': binaryContext('-b ./test/fixtures-batch-6/partials/\\*\\*/*.css -o test/fixtures-batch-6-output', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-6');
+      },
+      'creates two separate minified files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/extra/four-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/extra/three-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/one-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/two-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/quoted-svg-min.css'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-6-output/five-min.css'));
+      },
+      'teardown': function () {
+        execSync('rm -fr test/fixtures-batch-6');
+        execSync('rm -fr test/fixtures-batch-6-output');
       }
     })
   })

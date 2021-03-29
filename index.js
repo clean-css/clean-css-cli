@@ -120,6 +120,10 @@ function cli(process, beforeMinifyCallback) {
     options.sourceMap = false;
   }
 
+  if (options.output && options.batch) {
+    fs.mkdirSync(options.output, {recursive: true});
+  }
+
   var configurations = {
     batchSuffix: inputOptions.batchSuffix,
     beforeMinifyCallback: beforeMinifyCallback,
@@ -179,21 +183,33 @@ function expandGlobs(paths) {
     .map(function (path) { return path.substring(1); });
 
   return globPatterns.reduce(function (accumulator, path) {
-    return accumulator.concat(glob.sync(path, { ignore: ignoredGlobPatterns, nodir: true, nonull: true }));
+    var expandedWithSource =
+      glob.sync(path, { ignore: ignoredGlobPatterns, nodir: true, nonull: true })
+      .map(function (expandedPath) { return { expanded: expandedPath, source: path }; });
+
+    return accumulator.concat(expandedWithSource);
   }, []);
 }
 
 function minify(process, options, configurations, data) {
   var cleanCss = new CleanCSS(options);
+  var input = typeof(data) == 'string' ?
+    data :
+    data.map(function (o) { return o.expanded; });
 
   applyNonBooleanCompatibilityFlags(cleanCss, options.compatibility);
   configurations.beforeMinifyCallback(cleanCss);
-  cleanCss.minify(data, getSourceMapContent(configurations.inputSourceMap), function (errors, minified) {
+  cleanCss.minify(input, getSourceMapContent(configurations.inputSourceMap), function (errors, minified) {
     var inputPath;
+    var outputPath;
 
     if (options.batch && !('styles' in minified)) {
       for (inputPath in minified) {
-        processMinified(process, configurations, minified[inputPath], inputPath, toOutputPath(inputPath, configurations.batchSuffix));
+        outputPath = options.batch && options.output ?
+          toBatchOutputPath(inputPath, configurations.batchSuffix, options.output, data) :
+          toSimpleOutputPath(inputPath, configurations.batchSuffix);
+
+        processMinified(process, configurations, minified[inputPath], inputPath, outputPath);
       }
     } else {
       processMinified(process, configurations, minified, null, options.output);
@@ -201,10 +217,20 @@ function minify(process, options, configurations, data) {
   });
 }
 
-function toOutputPath(inputPath, batchSuffix) {
+function toSimpleOutputPath(inputPath, batchSuffix) {
   var extensionName = path.extname(inputPath);
 
   return inputPath.replace(new RegExp(extensionName + '$'), batchSuffix + extensionName);
+}
+
+function toBatchOutputPath(inputPath, batchSuffix, output, expandedWithSource) {
+  var extensionName = path.extname(inputPath);
+  var inputSource = expandedWithSource.find(function (ic) { return ic.expanded == inputPath; }).source;
+  var inputSourceRoot = inputSource.indexOf('*') > -1 ?
+    inputSource.substring(0, inputSource.indexOf('*')) :
+    path.dirname(inputSource);
+
+  return path.join(output, inputPath.replace(inputSourceRoot, '').replace(new RegExp(extensionName + '$'), batchSuffix + extensionName));
 }
 
 function processMinified(process, configurations, minified, inputPath, outputPath) {
