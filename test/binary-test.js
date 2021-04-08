@@ -948,4 +948,25 @@ vows.describe('cleancss')
       }
     })
   })
+  .addBatch({
+    'batch processing with source maps, rebase and output as a path': binaryContext('-b ./test/fixtures-batch-9/partials-relative/\\*\\*/included.css --source-map --with-rebase -o test/fixtures-batch-9-output', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-9');
+      },
+      'does not raise an error': function (error, stdout, stderr) {
+        assert.equal(stderr, '');
+      },
+      'rebases output correctly': function () {
+        var minimized = fs.readFileSync('./test/fixtures-batch-9-output/extra/included-min.css', 'utf-8');
+        assert.equal(minimized, 'a{background:url(../fixtures-batch-9/partials/extra/down.gif) 0 0 no-repeat}\n/*# sourceMappingURL=included-min.css.map */');
+      },
+      'creates source map files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-batch-9-output/extra/included-min.css.map'));
+      },
+      'teardown': function () {
+        execSync('rm -fr test/fixtures-batch-9');
+        execSync('rm -fr test/fixtures-batch-9-output');
+      }
+    })
+  })
   .export(module);

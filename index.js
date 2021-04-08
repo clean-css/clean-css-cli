@@ -92,9 +92,7 @@ function cli(process, beforeMinifyCallback) {
     level: { 1: true },
     output: inputOptions.output,
     rebase: inputOptions.withRebase ? true : false,
-    rebaseTo: inputOptions.withRebase && ('output' in inputOptions) && inputOptions.output.length > 0 ?
-      path.dirname(path.resolve(inputOptions.output)) :
-      (inputOptions.withRebase ? process.cwd() : undefined),
+    rebaseTo: undefined,
     sourceMap: inputOptions.sourceMap,
     sourceMapInlineSources: inputOptions.sourceMapInlineSources
   };
@@ -124,6 +122,18 @@ function cli(process, beforeMinifyCallback) {
     fs.mkdirSync(options.output, {recursive: true});
   }
 
+  if (inputOptions.withRebase && ('output' in inputOptions) && inputOptions.output.length > 0) {
+    if (isDirectory(path.resolve(inputOptions.output))) {
+      options.rebaseTo = path.resolve(inputOptions.output);
+    } else {
+      options.rebaseTo = path.dirname(path.resolve(inputOptions.output));
+    }
+  } else {
+    if (inputOptions.withRebase) {
+      options.rebaseTo = process.cwd();
+    }
+  }
+
   var configurations = {
     batchSuffix: inputOptions.batchSuffix,
     beforeMinifyCallback: beforeMinifyCallback,
@@ -145,6 +155,18 @@ function cli(process, beforeMinifyCallback) {
     stdin.on('end', function () {
       minify(process, options, configurations, data);
     });
+  }
+}
+
+function isDirectory(path) {
+  try {
+    return fs.statSync(path).isDirectory();
+  } catch (e) {
+    if (e.code == 'ENOENT') {
+      return false;
+    } else {
+      throw e;
+    }
   }
 }
 
