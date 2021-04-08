@@ -115,7 +115,7 @@ function cli(process, beforeMinifyCallback) {
     options.sourceMap = true;
   }
 
-  if (options.sourceMap && !options.output) {
+  if (options.sourceMap && !options.output && !options.batch) {
     outputFeedback(['Source maps will not be built because you have not specified an output file.'], true);
     options.sourceMap = false;
   }

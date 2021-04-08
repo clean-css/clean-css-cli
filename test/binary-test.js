@@ -903,4 +903,49 @@ vows.describe('cleancss')
       }
     })
   })
+  .addBatch({
+    'batch processing with source maps': binaryContext('-b ./test/fixtures-batch-7/partials/\\*\\*/*.css --source-map', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-7');
+        execSync('rm -fr test/fixtures-batch-7/partials/extra/four.css');
+        execSync('touch test/fixtures-batch-7/partials/extra/four.css');
+      },
+      'does not raise an error': function (error, stdout, stderr) {
+        assert.equal(stderr, '');
+      },
+      'creates source map files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-batch-7/partials/extra/three-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-7/partials/one-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-7/partials/two-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-7/partials/quoted-svg-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-7/partials/five-min.css.map'));
+      },
+      'teardown': function () {
+        execSync('rm -fr test/fixtures-batch-7');
+      }
+    })
+  })
+  .addBatch({
+    'batch processing with source maps and output as a path': binaryContext('-b ./test/fixtures-batch-8/partials/\\*\\*/*.css --source-map -o test/fixtures-batch-8-output', {
+      'setup': function () {
+        execSync('cp -fr test/fixtures test/fixtures-batch-8');
+        execSync('rm -fr test/fixtures-batch-8/partials/extra/four.css');
+        execSync('touch test/fixtures-batch-8/partials/extra/four.css');
+      },
+      'does not raise an error': function (error, stdout, stderr) {
+        assert.equal(stderr, '');
+      },
+      'creates source map files': function () {
+        assert.isTrue(fs.existsSync('test/fixtures-batch-8-output/extra/three-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-8-output/one-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-8-output/two-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-8-output/quoted-svg-min.css.map'));
+        assert.isTrue(fs.existsSync('test/fixtures-batch-8-output/five-min.css.map'));
+      },
+      'teardown': function () {
+        execSync('rm -fr test/fixtures-batch-8');
+        execSync('rm -fr test/fixtures-batch-8-output');
+      }
+    })
+  })
   .export(module);
