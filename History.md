@@ -1,4 +1,4 @@
-[5.3.0 / 2021-04-28](https://github.com/jakubpawlowicz/clean-css-cli/compare/v5.2.2...5.3)
+[5.3.0 / 2021-04-28](https://github.com/jakubpawlowicz/clean-css-cli/compare/5.2...v5.3.0)
 ==================
 
 * Fixed issue [#61](https://github.com/jakubpawlowicz/clean-css-cli/issues/61) - source maps, rebasing, and batch processing.
