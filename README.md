@@ -238,10 +238,10 @@ cleancss --inline 'local,remote,!fonts.googleapis.com' one.css
 
 ## Optimization levels
 
-The `--level` option can be either `0`, `1` (default), or `2`, e.g.
+The `-O` option can be either `0`, `1` (default), or `2`, e.g.
 
 ```shell
-cleancss --level 2 one.css
+cleancss -O2 one.css
 ```
 
 or a fine-grained configuration given via a string.
