@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jakubpawlowicz/clean-css-cli.git"
+    "url": "git+https://github.com/clean-css/clean-css-cli.git"
   },
   "keywords": [
     "css",
@@ -22,7 +22,7 @@
   "author": "Jakub Pawlowicz <contact@jakubpawlowicz.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/jakubpawlowicz/clean-css-cli/issues"
+    "url": "https://github.com/clean-css/clean-css-cli/issues"
   },
   "main": "index.js",
   "files": [
@@ -32,7 +32,7 @@
     "LICENSE",
     "README.md"
   ],
-  "homepage": "https://github.com/jakubpawlowicz/clean-css-cli#readme",
+  "homepage": "https://github.com/clean-css/clean-css-cli#readme",
   "dependencies": {
     "clean-css": "^5.1.2",
     "commander": "7.x",

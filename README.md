@@ -6,8 +6,8 @@
 </h1>
 
 [![NPM version](https://img.shields.io/npm/v/clean-css-cli.svg?style=flat)](https://www.npmjs.com/package/clean-css-cli)
-![x86 Linux build](https://github.com/jakubpawlowicz/clean-css-cli/workflows/x86%20Linux%20build/badge.svg)
-[![Dependency Status](https://img.shields.io/david/jakubpawlowicz/clean-css-cli.svg?style=flat)](https://david-dm.org/jakubpawlowicz/clean-css-cli)
+![x86 Linux build](https://github.com/clean-css/clean-css-cli/workflows/x86%20Linux%20build/badge.svg)
+[![Dependency Status](https://img.shields.io/david/clean-css/clean-css-cli.svg?style=flat)](https://david-dm.org/clean-css/clean-css-cli)
 [![NPM Downloads](https://img.shields.io/npm/dm/clean-css-cli.svg)](https://www.npmjs.com/package/clean-css-cli)
 
 clean-css-cli is a command-line interface to [clean-css](https://github.com/jakubpawlowicz/clean-css) - fast and efficient CSS optimizer for [Node.js](http://nodejs.org/).
@@ -444,14 +444,14 @@ will apply level 1 optimizations, except url normalization, and default level 2 
 
 # Contributing
 
-See [CONTRIBUTING.md](https://github.com/jakubpawlowicz/clean-css-cli/blob/master/CONTRIBUTING.md).
+See [CONTRIBUTING.md](https://github.com/clean-css/clean-css-cli/blob/master/CONTRIBUTING.md).
 
 ## How to get started?
 
 First clone the sources:
 
 ```shell
-git clone git@github.com:jakubpawlowicz/clean-css-cli.git
+git clone git@github.com:clean-css/clean-css-cli.git
 ```
 
 then install dependencies:
@@ -470,4 +470,4 @@ npm test # to run all tests
 
 # License
 
-clean-css-cli is released under the [MIT License](https://github.com/jakubpawlowicz/clean-css-cli/blob/master/LICENSE).
+clean-css-cli is released under the [MIT License](https://github.com/clean-css/clean-css-cli/blob/master/LICENSE).

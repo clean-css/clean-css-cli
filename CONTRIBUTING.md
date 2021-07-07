@@ -37,7 +37,7 @@ At the end make sure code styling validation passes:
 npm run check
 ```
 
-Finally push to your fork and [submit a pull request](https://github.com/jakubpawlowicz/clean-css-cli/compare/).
+Finally push to your fork and [submit a pull request](https://github.com/clean-css/clean-css-cli/compare/).
 
 At this point you're waiting for a PR review which should not thake more than a day.
 
