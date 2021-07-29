@@ -34,7 +34,7 @@
   ],
   "homepage": "https://github.com/clean-css/clean-css-cli#readme",
   "dependencies": {
-    "clean-css": "^5.1.2",
+    "clean-css": "5.1.3",
     "commander": "7.x",
     "glob": "^7.1.6"
   },
