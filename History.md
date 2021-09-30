@@ -1,4 +1,4 @@
-[5.4.0 / 2021-xx-xx](https://github.com/clean-css/clean-css-cli/compare/5.3...HEAD)
+[5.4.0 / 2021-09-30](https://github.com/clean-css/clean-css-cli/compare/5.3...v5.4.0)
 ==================
 
 * Bumps clean-css dependency to 5.2.0.
