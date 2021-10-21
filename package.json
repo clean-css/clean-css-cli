@@ -1,6 +1,6 @@
 {
   "name": "clean-css-cli",
-  "version": "5.4.1",
+  "version": "5.4.2",
   "description": "A command-line interface to clean-css CSS optimization library",
   "scripts": {
     "check": "jshint ./bin/cleancss .",
