@@ -145,13 +145,14 @@ function cli(process, beforeMinifyCallback) {
 
   // ... and do the magic!
   if (program.args.length > 0) {
+    var expandedGlobs = expandGlobs(program.args);
     if (inputOptions.watch) {
-      var inputPaths = expandGlobs(program.args).map(function (path) { return path.expanded; });
+      var inputPaths = expandedGlobs.map(function (path) { return path.expanded; });
       require('chokidar').watch(inputPaths).on('change', function () {
-        minify(process, options, configurations, expandGlobs(program.args));
+        minify(process, options, configurations, expandedGlobs);
       });
     } else {
-      minify(process, options, configurations, expandGlobs(program.args));
+      minify(process, options, configurations, expandedGlobs);
     }
   } else {
     stdin = process.openStdin();
