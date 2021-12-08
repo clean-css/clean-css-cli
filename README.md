@@ -19,6 +19,7 @@ Previously a part of clean-css it's a separate package since clean-css 4.0.
 - [Node.js version support](#nodejs-version-support)
 - [Install](#install)
 - [Use](#use)
+  * [What's new in version 5.5](#whats-new-in-version-55)
   * [What's new in version 5.1](#whats-new-in-version-51)
   * [What's new in version 5.0](#whats-new-in-version-50)
   * [What's new in version 4.3](#whats-new-in-version-43)
@@ -60,6 +61,12 @@ Note: Global install via -g option is recommended unless you want to execute the
 ```shell
 cleancss -o one.min.css one.css
 ```
+
+## What's new in version 5.5
+
+clean-css-cli 5.5 introduces the following changes / features:
+
+* adds a new `--watch` switch, which makes `cleancss` re-run optimizations when watched file(s) change.
 
 ## What's new in version 5.1
 
