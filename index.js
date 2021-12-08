@@ -37,7 +37,8 @@ function cli(process, beforeMinifyCallback) {
     .option('--remove-inlined-files', 'Remove files inlined in <source-file ...> or via `@import` statements')
     .option('--source-map', 'Enables building input\'s source map')
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
-    .option('--with-rebase', 'Enable URLs rebasing');
+    .option('--with-rebase', 'Enable URLs rebasing')
+    .option('--watch', 'Runs CLI in watch mode');
 
   program.on('--help', function () {
     console.log('');
@@ -144,7 +145,15 @@ function cli(process, beforeMinifyCallback) {
 
   // ... and do the magic!
   if (program.args.length > 0) {
-    minify(process, options, configurations, expandGlobs(program.args));
+    var expandedGlobs = expandGlobs(program.args);
+    if (inputOptions.watch) {
+      var inputPaths = expandedGlobs.map(function (path) { return path.expanded; });
+      require('chokidar').watch(inputPaths).on('change', function () {
+        minify(process, options, configurations, expandedGlobs);
+      });
+    } else {
+      minify(process, options, configurations, expandedGlobs);
+    }
   } else {
     stdin = process.openStdin();
     stdin.setEncoding('utf-8');
