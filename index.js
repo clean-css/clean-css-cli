@@ -151,7 +151,7 @@ function cli(process, beforeMinifyCallback) {
 
       minify(process, options, configurations, expandedGlobs);
       require('chokidar').watch(inputPaths).on('change', function (pathToChangedFile) {
-        console.log(`File '${pathToChangedFile}' has changed. Rerunning all optimizations...`)
+        console.log(`File '${pathToChangedFile}' has changed. Rerunning all optimizations...`);
         minify(process, options, configurations, expandedGlobs);
       });
     } else {
