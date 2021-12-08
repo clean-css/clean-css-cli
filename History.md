@@ -1,3 +1,8 @@
+[5.5.0 / 2021-xx-xx](https://github.com/clean-css/clean-css-cli/compare/5.4...HEAD)
+==================
+
+* Adds a new `--watch` switch, which makes CLI re-run optimizations when watched file(s) change.
+
 [5.4.2 / 2021-10-21](https://github.com/clean-css/clean-css-cli/compare/v5.4.1...v5.4.2)
 ==================
 
