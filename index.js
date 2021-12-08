@@ -150,7 +150,8 @@ function cli(process, beforeMinifyCallback) {
       var inputPaths = expandedGlobs.map(function (path) { return path.expanded; });
 
       minify(process, options, configurations, expandedGlobs);
-      require('chokidar').watch(inputPaths).on('change', function () {
+      require('chokidar').watch(inputPaths).on('change', function (pathToChangedFile) {
+        console.log(`File '${pathToChangedFile}' has changed. Rerunning all optimizations...`)
         minify(process, options, configurations, expandedGlobs);
       });
     } else {
