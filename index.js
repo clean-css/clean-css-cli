@@ -148,6 +148,8 @@ function cli(process, beforeMinifyCallback) {
     var expandedGlobs = expandGlobs(program.args);
     if (inputOptions.watch) {
       var inputPaths = expandedGlobs.map(function (path) { return path.expanded; });
+
+      minify(process, options, configurations, expandedGlobs);
       require('chokidar').watch(inputPaths).on('change', function () {
         minify(process, options, configurations, expandedGlobs);
       });
