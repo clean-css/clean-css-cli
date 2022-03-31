@@ -1,3 +1,8 @@
+[5.6.0 / 2022-xx-xx](https://github.com/clean-css/clean-css-cli/compare/v5.5.2...5.6)
+==================
+
+* Bumps clean-css dependency to 5.3.0.
+
 [5.5.2 / 2022-01-28](https://github.com/clean-css/clean-css-cli/compare/v5.5.1...v5.5.2)
 ==================
 
