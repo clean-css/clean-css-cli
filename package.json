@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "http-proxy": "1.x",
-    "jshint": "^2.12.0",
+    "jshint": "^2.13.0",
     "source-map": "0.5.x",
     "vows": "^0.8.3"
   },
