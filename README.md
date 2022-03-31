@@ -14,6 +14,8 @@ clean-css-cli is a command-line interface to [clean-css](https://github.com/jaku
 
 Previously a part of clean-css it's a separate package since clean-css 4.0.
 
+__IMPORTANT: clean-css-cli is now in a [maintenance mode](https://github.com/clean-css/clean-css-cli/discussions/76). PRs are still welcome, and I will try do an occasional bugfix relase.__
+
 **Table of Contents**
 
 - [Node.js version support](#nodejs-version-support)
