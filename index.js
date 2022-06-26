@@ -104,6 +104,8 @@ function cli(process, beforeMinifyCallback) {
 
   if (program.rawArgs.indexOf('-O1') > -1) {
     options.level[1] = findArgumentTo('-O1', program.rawArgs, program.args);
+  } else {
+    options.level[1] = false;
   }
 
   if (program.rawArgs.indexOf('-O2') > -1) {
