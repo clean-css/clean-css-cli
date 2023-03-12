@@ -100,6 +100,7 @@ function cli(process, beforeMinifyCallback) {
 
   if (program.rawArgs.indexOf('-O0') > -1) {
     options.level[0] = true;
+    options.level[1] = false;
   }
 
   if (program.rawArgs.indexOf('-O1') > -1) {
