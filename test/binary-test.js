@@ -157,6 +157,13 @@ vows.describe('cleancss')
     })
   })
   .addBatch({
+    'level 0 optimizations': pipedContext('a{color:#ff0000;margin:0 0 0 0}', '-O0', {
+      'should skip all optimizations': function (error, stdout) {
+        assert.equal(stdout, 'a{color:#ff0000;margin:0 0 0 0}');
+      }
+    })
+  })
+  .addBatch({
     'enable restructuring optimizations': pipedContext('div{margin-top:0}.one{margin:0}.two{display:block;margin-top:0}', '-O2 restructureRules:on', {
       'should do basic optimizations only': function (error, stdout) {
         assert.equal(stdout, '.two,div{margin-top:0}.one{margin:0}.two{display:block}');
