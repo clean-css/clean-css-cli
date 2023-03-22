@@ -38,6 +38,7 @@ function cli(process, beforeMinifyCallback) {
     .option('--source-map', 'Enables building input\'s source map')
     .option('--source-map-inline-sources', 'Enables inlining sources inside source maps')
     .option('--with-rebase', 'Enable URLs rebasing')
+    .option('--skip-rebase', 'Disable URLs rebasing')
     .option('--watch', 'Runs CLI in watch mode');
 
   program.on('--help', function () {
