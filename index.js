@@ -124,7 +124,7 @@ function cli(process, beforeMinifyCallback) {
     fs.mkdirSync(options.output, {recursive: true});
   }
 
-  if (inputOptions.withRebase && ('output' in inputOptions) && inputOptions.output.length > 0) {
+  if (inputOptions.withRebase && ('output' in inputOptions) && inputOptions.output.length > 0 && !inputOptions.skipRebase) {
     if (isDirectory(path.resolve(inputOptions.output))) {
       options.rebaseTo = path.resolve(inputOptions.output);
     } else {
