@@ -147,6 +147,7 @@ clean-css-cli 4.0 introduces some breaking changes:
 --source-map                   Enables building input's source map
 --source-map-inline-sources    Enables inlining sources inside source maps
 --with-rebase                  Enables URLs rebasing
+--skip-rebase                  Disables URLs rebasing (overwrites with-rebase).
 ```
 
 ## Compatibility modes
@@ -423,7 +424,7 @@ which sets all units rounding precision to 3 digits except `px` unit precision o
 
 ## How to rebase relative image URLs?
 
-clean-css-cli will rebase paths it automatically for you when full paths to input files are passed, and `--with-rebase` & `--output` options are used, e.g
+clean-css-cli will rebase paths automatically for you when full paths to input files are passed, and `--with-rebase` & `--output` options are used, but not if `--skip-rebase` is used, e.g
 
 ```css
 /*! one.css */
