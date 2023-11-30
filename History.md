@@ -1,4 +1,4 @@
-[5.6.3 / 2023-xx-xx](https://github.com/clean-css/clean-css-cli/compare/v5.6.2...5.6)
+[5.6.3 / 2023-11-30](https://github.com/clean-css/clean-css-cli/compare/v5.6.2...v5.6.3)
 ==================
 
 * Bumps clean-css dependency to 5.3.3
